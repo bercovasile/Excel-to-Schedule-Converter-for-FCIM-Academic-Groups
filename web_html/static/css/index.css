@@ -1,0 +1,212 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+header {
+    background-color: #DFD3C3;
+    padding: 1px;
+    text-align: center;
+    font-size: 35px;
+    color: white;
+}
+
+aside {
+    background-color: #F8EDE3;
+}
+
+footer {
+    background-color: #F8EDE3;
+    padding: 10px;
+    text-align: center;
+    color: white;
+}
+
+h2 {
+    color: #000;
+    text-align: center;
+    font-family: Montserrat;
+    font-size: 128px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+table {
+    width: 100%;
+}
+
+td {
+    text-align: right;
+    vertical-align: middle;
+    width: 50%;
+    padding: 30px;
+}
+
+/* Style the "you" text with a different color */
+.you {
+    color: #FF626D;
+    /* Schimbați aici culoarea dorită */
+}
+
+/* style pentru pentrul boxul care contine imagimile si textul  */
+.box {
+    width: 500px;
+    height: 570px;
+    flex-shrink: 0;
+    border-radius: 51px;
+    background: #64B9AB;
+    box-shadow: 15px 23px 45px 0px rgba(0, 0, 0, 0.25);
+
+}
+
+.content_person_inside {
+    padding: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: top;
+}
+
+.box_inside_content_person_box {
+    padding: 0px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.buton_box_insidein_box {
+    width: 250px;
+    height: 61px;
+    flex-shrink: 0;
+    /*border-radius: 20px;
+    background: #FF626D;*/
+}
+
+.text_in_buton {
+    padding: 0px;
+    color: #FFF;
+    text-align: center;
+    font-family: Montserrat;
+    font-size: 45px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.content_teacher_button {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    align-items: center;
+
+}
+
+.content_student_button {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+
+}
+
+.box {
+    transition: transform 0.3s ease, border 0.3s ease;
+    position: relative;
+    /* Adăugați poziția relativă pentru a permite animațiile border */
+}
+
+.box:hover {
+    transform: scale(1.1);
+    border: var(--border-width) solid transparent;
+}
+
+.imgSvg {
+    width: 300px;
+    height: 356px;
+
+}
+
+@media (max-width: 1150px) {
+    aside {
+        width: 100%;
+        height: auto;
+    }
+
+    h2,
+    .you {
+        font-size: 100px;
+    }
+
+    .box {
+        width: 300px;
+        height: 450px;
+    }
+
+    .imgSvg {
+        width: 200px;
+        height: 256px;
+    }
+
+}
+
+@media (max-width: 750px) {
+    aside {
+        width: 100%;
+        height: auto;
+    }
+
+    h2,
+    .you {
+        font-size: 60px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    tr {
+        display: block;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    td {
+        display: block;
+        width: 100%;
+        padding: 30px;
+    }
+
+    .content_teacher_button,
+    .content_student_button {
+        justify-content: center;
+        align-items: center;
+    }
+
+    .box {
+        width: 300px;
+        height: 450px;
+    }
+}
+
+@media (max-width: 400px) {
+    aside {
+        width: 100%;
+        height: auto;
+    }
+
+    h2,
+    .you {
+        font-size: 40px;
+    }
+
+}

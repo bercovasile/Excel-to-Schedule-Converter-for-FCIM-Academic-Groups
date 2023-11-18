@@ -2,231 +2,16 @@
 <html lang="en">
 
 <head>
-  <title>CSS Template</title>
+  <title>TimeTable</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
+  <link rel="stylesheet" href="../static/css/student.css">
+
   <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-    }
-
-    /* Style the header */
-    header {
-      background-color: #DFD3C3;
-      padding: 10px;
-      height: 100px;
-      color: white;
-
-    }
-
-    /* Container for flexboxes */
-
-
-    /* Style the navigation menu */
-
-
-    /* Style the footer */
-    footer {
-      background-color: #DFD3C3;
-      padding: 10px;
-      text-align: center;
-      color: white;
-    }
-
-    #myDiv {
-      width: 100px;
-      height: 100px;
-     
-      display: none;
-      /* Inițial div-ul este invizibil */
-    }
-
-    /* test dart8*/
-    select {
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      -ms-appearance: none;
-      appearance: none;
-      outline: 0;
-      box-shadow: none;
-      border: 0 !important;
-      background: #469597;
-      background-image: none;
-      flex: 1;
-      padding: 0 .5em;
-      color: #fff;
-      cursor: pointer;
-      font-size: 1em;
-      font-family: 'Open Sans', sans-serif;
-    }
-
-    select::-ms-expand {
-      display: none;
-    }
-
-    .select {
-      position: relative;
-      display: flex;
-      width: 15em;
-      height: 3em;
-      line-height: 3;
-      background: #51f0cd;
-      overflow: hidden;
-      border-radius: .25em;
-    }
-
-    .select::after {
-      content: '\25BC';
-      position: absolute;
-      top: 0;
-      right: 0;
-      padding: 0 .8em;
-      background: #62a0a0;
-      cursor: pointer;
-      pointer-events: none;
-      transition: .25s all ease;
-    }
-
-    .select:hover::after {
-      color: #23b499;
-    }
-
-    /* div box */
-    .select_box {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-
-    }
-
-    aside {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 850px;
-
-      margin: 0;
-      padding-bottom: 50px;
-      background-color: #F8EDE3;
-    }
-
-    .box_tabel {
-      width: 93%;
-      /* Poți ajusta dimensiunea pe lățime */
-      height: auto;
-      /* Ajustăm înălțimea la conținut */
-      max-height: 100vh;
-      /* Limităm înălțimea maximă a conținutului pentru a nu depăși ecranul */
-      overflow-y: auto;
-      /* Adăugăm scroll dacă conținutul depășește înălțimea maximă */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-
-    .table_first_row {
-      width: 250px;
-      height: 60px;
-      border-radius: 5px;
-      background: #64B9AB;
-      font-size: 30px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-    }
-
-    .table_first_column {
-      width: 250px;
-      height: 100px;
-      font-size: 23px;
-      border-radius: 5px;
-      background: #64B9AB;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-    }
-
-    .table_cell_content {
-      width: 250px;
-      height: 100px;
-      font-size: 23px;
-      border-radius: 5px;
-      background: #4f739c;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-    }
-
-    .table_cell_content_merge {
-      padding: 2px;
-      width: 250px;
-      height: 50px;
-      font-size: 23px;
-      border-radius: 5px;
-      background: #4f739c;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-
-
-    /* Responsive layout - makes the menu and the content (inside the section) sit on top of each other instead of next to each other */
-    @media (max-width: 600px) {
-      section {
-        -webkit-flex-direction: column;
-        flex-direction: column;
-      }
-
-      header {
-        height: 200px;
-      }
-
-      .test_table {
-        width: 100%;
-
-
-      }
-
-      .test_tr {
-        display: block;
-        margin-bottom: 10px;
-        text-align: center;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-
-      }
-
-      .test_td {
-        display: block;
-        width: 100%;
-        padding: 20px;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-
-      }
-
-    }
-  </style>
-
-
+  <script src="../static/js/student.js"></script>
 
 </head>
 
@@ -251,11 +36,12 @@
               </section>
             </div>
           </td>
+
           <td class="test_td">
             <div class="select_box">
               <section>
                 <div class="select">
-                  <select id="selectOptionsGrups" onchange="sendSelectedOptionGrups()" name="format">
+                  <select id="selectOptionsGrups" onchange="checkScreenWidth()" name="format">
                     <option>-- Grupa --</option>
                   </select>
                 </div>
@@ -272,7 +58,6 @@
 
 
   <aside>
-
     <div class="box_tabel">
       <div id="excel_data" class="mt-5"></div>
     </div>
@@ -282,128 +67,8 @@
 
   <footer>
     <p>Footer</p>
-
-
   </footer>
-  <script>
 
-    function updateSecondComboBox() {
-      const selectOptions = document.getElementById("selectOptions");
-      const selectedOption = selectOptions.value;
-
-      const selectOptionsGrups = document.getElementById("selectOptionsGrups");
-
-      fetch("/get_options_grups", {
-        method: "POST", // sau "GET" în funcție de necesități
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ selectedOption }),
-      })
-        .then(response => response.json())
-        .then(data => {
-          // Ștergeți opțiunile actuale din al doilea combobox
-          selectOptionsGrups.innerHTML = "";
-
-          // Adăugați opțiunile noi în al doilea combobox
-          data.options.forEach(option => {
-            const optionElement = document.createElement("option");
-            optionElement.textContent = option;
-            optionElement.value = option;
-            selectOptionsGrups.appendChild(optionElement);
-          });
-        })
-        .catch(error => {
-          console.error("Error updating second combobox:", error);
-        });
-    }
-
-    function sendSelectedOptionGrups() {
-      const selectOptionsGrups = document.getElementById("selectOptionsGrups");
-      const selectedOptionGrups = selectOptionsGrups.value; // Obțineți valoarea opțiunii selectate
-      // Trimiteți opțiunea aleasă către backend folosind o cerere AJAX
-      fetch("/handle_selected_option_grups", {
-        method: "POST", // sau "GET" în funcție de necesități
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ selectedOptionGrups }),
-      })
-        .then(response => response.blob())
-        .then(blob => {
-
-          excel_to_html_table_4(blob);
-
-
-
-        })
-        .catch(error => {
-          console.error("Error sending selected option:", error);
-        });
-    }
-
-
-    function excel_to_html_table_4(excel_blob) {
-      var reader = new FileReader();
-      reader.onload = function (event) {
-        var data = new Uint8Array(event.target.result);
-        var workbook = XLSX.read(data, { type: "array" });
-        var sheet_name = workbook.SheetNames[0];
-        var sheet_data = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name], { header: 1 });
-
-
-        if (sheet_data.length > 0) {
-          var table_output = '<table class="listViewTable table-sortable" id="listViewTable" >';
-          for (var row = 0; row < sheet_data.length; row = row + 2) {
-            var merge_data = '';
-            table_output += '<tr class="ce1 colorYellow">';
-
-            for (var cell = 0; cell < sheet_data[row].length; cell++) {
-              // Verificăm dacă valoarea este undefined și o înlocuim cu un spațiu gol
-              var cellValue = sheet_data[row][cell] === undefined ? " " : sheet_data[row][cell];
-
-              if (row == 0) {
-                table_output += '<th class="name1 hsText "><div class="table_first_row">' + cellValue + '</div></th>';
-              } else {
-
-                if (sheet_data[row + 1][cell] !== undefined) {
-
-                  var undefinedCellValue = cellValue === '.' ? "📖" : cellValue;
-                  table_output += '<td class="entry1 hsText"><div class="table_cell_content_merge"> ' + undefinedCellValue + '</div></td>';
-
-                  var mergeCell = sheet_data[row + 1][cell] === '.' ? "📖" : sheet_data[row + 1][cell];
-                  merge_data += '<td class="entry1 hsText"><div class="table_cell_content_merge">' + mergeCell + '</div></td>';
-
-                } else {
-                  if ((cell == 0) && (row != 0)) {
-                    var undefinedCellValue = cellValue === '.' ? "📖  <font siz</font>" : cellValue;
-                    table_output += '<td class="entry1 hsText" rowspan="2"><div class="table_first_column">' + undefinedCellValue + '</div></td>';
-                  }
-                  else {
-                    var undefinedCellValue = cellValue === '.' ? "📖" : cellValue;
-                    table_output += '<td class="entry1 hsText" rowspan="2"><div class="table_cell_content">' + undefinedCellValue + '</div></td>';
-                  }
-                }
-              }
-            }
-            table_output += '</tr>';
-            if (merge_data === '')
-              table_output += '<tr></tr>';
-            else
-              table_output += '<tr>' + merge_data + '</tr>';
-          }
-          table_output += '</table>';
-          document.getElementById('excel_data').innerHTML = table_output;
-        }
-      };
-
-      reader.readAsArrayBuffer(excel_blob);
-    }
-
-
-
-
-  </script>
 </body>
 
 </html>

@@ -2,283 +2,80 @@
 <html lang="en">
 
 <head>
-    <title>CSS Template</title>
+    <title>TimeTable</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" media="all" href="css/style_animation.css">
-    <style>
-        * {
-            box-sizing: border-box;
+
+    <link rel="stylesheet" href="../static/css/index.css">
+
+    <script>
+        // Adăugați o funcție JavaScript pentru a redirecționa la ruta /student
+        function redirectToStudent() {
+            fetch('/student', { method: 'GET' })
+            window.location.href = '/student';
         }
 
-        body {
-            font-family: Arial, Helvetica, sans-serif;
+        // Adăugați o funcție JavaScript pentru a redirecționa la ruta /student
+        function redirectToTeacher() {
+            fetch('/student', { method: 'GET' })
+            window.location.href = '/teacher';
         }
-        header {
-            background-color: #DFD3C3;
-            padding: 1px;
-            text-align: center;
-            font-size: 35px;
-            color: white;
-        }
-        aside{
-            background-color: #F8EDE3;
-        }
+    </script>
 
-        footer {
-            background-color: #F8EDE3;
-            padding: 10px;
-            text-align: center;
-            color: white;
-        }
 
-        h2 {
-            color: #000;
-            text-align: center;
-            font-family: Montserrat;
-            font-size: 128px;
-            font-style: normal;
-            font-weight: 700;
-            line-height: normal;
-        }
-        table {
-            width: 100%;
-        }
-                    
-        td {
-            text-align: right;
-            vertical-align: middle;
-            width: 50%;
-            padding: 30px;
-        }
-
-        /* Style the "you" text with a different color */
-        .you {
-            color: #FF626D;
-            /* Schimbați aici culoarea dorită */
-        }
-        
-            /* style pentru pentrul boxul care contine imagimile si textul  */
-        .box {
-            width: 500px;
-            height: 570px;
-            flex-shrink: 0;
-            border-radius: 51px;
-            background: #64B9AB;
-            box-shadow: 15px 23px 45px 0px rgba(0, 0, 0, 0.25);
-            
-        }
-
-        .content_person_inside{
-            padding: 30px;
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            align-items: top;
-        } 
-
-        .box_inside_content_person_box{
-            padding: 0px;
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            align-items:center;
-        }
-
-        .buton_box_insidein_box{
-            width: 250px;
-            height: 61px;
-            flex-shrink: 0;
-            /*border-radius: 20px;
-            background: #FF626D;*/
-        }
-
-        .text_in_buton{
-            padding: 0px;
-            color: #FFF;
-            text-align: center;
-            font-family: Montserrat;
-            font-size: 45px;
-            font-style: normal;
-            font-weight: 700;
-            line-height: normal;
-        }
-
-        .content_teacher_button{
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: row;
-            justify-content: right;
-            align-items: center;
-            
-        }
-        
-        .content_student_button{
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: row;
-            justify-content: left;
-            align-items: center;
-            
-        }
-        .box {
-            transition: transform 0.3s ease, border 0.3s ease;
-            position: relative; /* Adăugați poziția relativă pentru a permite animațiile border */
-        }
-
-        .box:hover {
-            transform: scale(1.1);
-            border: var(--border-width) solid transparent;
-        }
-
-        .imgSvg {
-            width: 300px;
-            height: 356px;
-            
-        }
-        @media (max-width: 1150px) {
-            aside {
-                width: 100%;
-                height: auto;
-            }
-            h2,.you {
-                font-size: 100px;
-            }
-            .box{
-                width: 300px;
-                height: 450px;
-            }
-            .imgSvg {
-            width: 200px;
-            height: 256px;
-            }
-            
-        }
-        @media (max-width: 750px) {
-            aside {
-                width: 100%;
-                height: auto;
-            }
-            h2,.you {
-                font-size: 60px;
-            }
-            table {
-                width: 100%;
-                border-collapse: collapse;
-            }
-            tr {
-                display: block;
-                margin-bottom: 10px;
-                text-align: center;
-            }
-            
-            td {
-                display: block;
-                width: 100%;
-                padding: 30px;
-            }
-            .content_teacher_button, .content_student_button{
-                justify-content: center;
-                align-items: center;
-            }
-            .box{
-                width: 300px;
-                height: 450px;
-            }
-        }
-        
-        @media (max-width: 400px) {
-            aside {
-                width: 100%;
-                height: auto;
-            }
-        
-            h2,.you {
-                font-size: 40px;
-            }
-        
-        }
-       
-        </style>
-        <script>
-            // Adăugați o funcție JavaScript pentru a redirecționa la ruta /student
-            function redirectToStudent() {
-                fetch('/student', { method: 'GET' })
-                window.location.href = '/student';
-            }
-
-            // Adăugați o funcție JavaScript pentru a redirecționa la ruta /student
-            function redirectToTeacher() {
-                fetch('/student', { method: 'GET' })
-                window.location.href = '/teacher';
-            }
-        </script>
-
-        
 </head>
 
 <body>
-    
+
     <header>
         <h2>Who are <span class="you">you?</span></h2>
     </header>
-    
+
     <aside>
 
         <table>
             <tr>
                 <td>
-                   
-                        
-                                <div class="content_teacher_button">
-                                    <div class="box" , onclick="redirectToTeacher()">
-                                        <div class="content_person_inside">
-                                            <img class="imgSvg" src="static/img/teacher (4) 1.svg" alt="">
-                                        </div>
-                                        <div class="box_inside_content_person_box">
-                                            <div class="buton_box_insidein_box">
-                                                <div class="text_in_buton">Teacher</div>
-                                            </div>
-                                        
-                                        </div>
-                                        
-                                    </div>
+                    <div class="content_teacher_button">
+                        <div class="box" , onclick="redirectToTeacher()">
+                            <div class="content_person_inside">
+                                <img class="imgSvg" src="static/img/teacher.svg" alt="">
+                            </div>
+                            <div class="box_inside_content_person_box">
+                                <div class="buton_box_insidein_box">
+                                    <div class="text_in_buton">Teacher</div>
                                 </div>
-                         
-                        
-                       
-                        
+
+                            </div>
+
+                        </div>
+                    </div>
                 </td>
 
                 <td>
-                        <div class="content_student_button">
-                            <div class="box", onclick="redirectToStudent()">
-                                <div class="content_person_inside">
-                                    <img class="imgSvg" src="static/img/student (1) 1.svg" alt="">
-                                </div>
-                                <div class="box_inside_content_person_box">
-                                    <div class="buton_box_insidein_box">
-                                        <div class="text_in_buton">Student</div>
-                                    </div>   
+                    <div class="content_student_button">
+                        <div class="box" , onclick="redirectToStudent()">
+                            <div class="content_person_inside">
+                                <img class="imgSvg" src="static/img/student.svg" alt="">
+                            </div>
+                            <div class="box_inside_content_person_box">
+                                <div class="buton_box_insidein_box">
+                                    <div class="text_in_buton">Student</div>
                                 </div>
                             </div>
                         </div>
+                    </div>
                 </td>
+
             </tr>
-            
+
         </table>
 
     </aside>
-
-
-
-
-
 
     <footer>
         <p>Footer</p>
