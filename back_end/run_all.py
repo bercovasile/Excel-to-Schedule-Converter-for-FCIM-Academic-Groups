@@ -19,7 +19,6 @@ for year in yearNames:
     os.makedirs(yearNames, exist_ok=True)
 
 
-
 print(f'{colors.BOLD}{colors.UNDERLINE}{colors.OKBLUE}####Creating groups schedules.{colors.ENDC }')
 subprocess.run(['python', 'student_schedule.py'])
 print(f'{colors.BOLD}{colors.UNDERLINE}{colors.OKBLUE}####Done.\n\n{colors.ENDC }')

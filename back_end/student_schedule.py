@@ -2,7 +2,6 @@ import openpyxl
 from openpyxl import load_workbook
 from openpyxl.styles import Alignment
 from openpyxl.styles import Font
-from openpyxl.cell.cell import MergedCell
 
 import os
 import re
