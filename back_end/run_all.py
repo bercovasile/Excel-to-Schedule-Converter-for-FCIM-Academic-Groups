@@ -12,11 +12,6 @@ class colors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-os.makedirs('group_schedules', exist_ok=True)
-yearNames=['anul_I', 'anul_II','anul_III', 'anul_IV']
-for year in yearNames:
-    os.makedirs(yearNames, exist_ok=True)
-
 print(f'{colors.BOLD}{colors.UNDERLINE}{colors.OKBLUE}####Creating groups schedules.{colors.ENDC }')
 subprocess.run(['python', 'student_schedule.py'])
 print(f'{colors.BOLD}{colors.UNDERLINE}{colors.OKBLUE}####Done.\n\n{colors.ENDC }')
