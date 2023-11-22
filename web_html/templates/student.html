@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>TimeTable</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="../static/css/student.css">
+
+  <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+  <script src="../static/js/student.js"></script>
+
+</head>
+
+<body>
+
+  <header>
+    <div class="select_box">
+      <table class="test_table">
+        <tr class="test_tr">
+          <td class="test_td">
+            <div class="select_box">
+              <section>
+                <div class="select">
+                  <select id="selectOptions" onchange="updateSecondComboBox()" name="format">
+                    <option>-- Anul --</option>
+                    <option value="Anul 1">Anul 1</option>
+                    <option value="Anul 2">Anul 2</option>
+                    <option value="Anul 3">Anul 3</option>
+                    <option value="Anul 4">Anul 4</option>
+                  </select>
+                </div>
+              </section>
+            </div>
+          </td>
+
+          <td class="test_td">
+            <div class="select_box">
+              <section>
+                <div class="select">
+                  <select id="selectOptionsGrups" onchange="checkScreenWidth()" name="format">
+                    <option>-- Grupa --</option>
+                  </select>
+                </div>
+              </section>
+            </div>
+
+          </td>
+
+        </tr>
+      </table>
+    </div>
+
+  </header>
+
+
+  <aside>
+    <div class="box_tabel">
+      <div id="excel_data" class="mt-5"></div>
+    </div>
+
+  </aside>
+
+
+  <footer>
+    <p>Footer</p>
+  </footer>
+
+</body>
+
+</html>
