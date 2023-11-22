@@ -446,6 +446,10 @@ excelFileCount=0
 yearNames=['anul_I', 'anul_II','anul_III', 'anul_IV']
 yearFileCount=0
 
+os.makedirs('group_schedules', exist_ok=True)
+for year in yearNames:
+    os.makedirs(f'group_schedules/{year}', exist_ok=True)
+
 for excelFile in excelFilenames:
     print(f'{colors.BOLD}{colors.OKGREEN}>>>>>>>>{yearNames[yearFileCount]}{colors.ENDC}')
     readingBook=load_workbook(excelFile)
