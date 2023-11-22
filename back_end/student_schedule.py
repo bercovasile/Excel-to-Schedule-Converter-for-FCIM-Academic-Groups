@@ -2,7 +2,6 @@ import openpyxl
 from openpyxl import load_workbook
 from openpyxl.styles import Alignment
 from openpyxl.styles import Font
-from openpyxl.cell.cell import MergedCell
 
 import os
 import re
@@ -71,6 +70,9 @@ def applyDefaultMergeStyle(writingSheet):
         for column in range(ord(startColumn), ord(endColumn)+1):
             currentCell=writingSheet[chr(column)+str(row)]
             underCell=writingSheet[chr(column)+str(row+1)]
+
+            if row!=1 and column!=65:
+                currentCell.value='#'
 
             writingSheet.merge_cells(f'{currentCell.coordinate}:{underCell.coordinate}')
 
@@ -396,55 +398,15 @@ def getGroupNames(schedule):
     return fcimGroups, dataRow
 
 #?----------------------------------------
-
-#?-------Setting stuff up-----------------
-#choosing data file:
-#!get it from the server
-# data_file='Anul_III_2023_Semestrul_V.xlsx'
-# yearFile='anul_III'
-
-# #load the data workbook
-# readingBook=load_workbook(data_file)
-#     #select datasheet
-# schedule=readingBook.active
-
-# #creating writing book
-# writingBook=openpyxl.Workbook()
-# writingSheet=writingBook.active
-# #?-----------------------------------------
-
-
-# #?------Style writing file-----------------
-# setTimeIntervals(writingSheet)
-# applyDefaultMergeStyle(writingSheet)
-# # ?-----------------------------------------
-
-# fcimGroups, groupRow=getGroupNames(schedule)
-# print(fcimGroups)
-
-#*---Searching column letter and saving----
-#*---custom named file.--------------------
-
-# searchValue=input("Search group: ")
-# searchResult_columnLetter=findGroupColumn(schedule, searchValue, groupRow)
-
-# if searchResult_columnLetter is not None:
-#     print(f"found {searchValue} on column {searchResult_columnLetter}.")
-#     extractAndTransferToTable(writingBook, schedule, searchResult_columnLetter)
-
-#     setTableDimensions(writingSheet, 20, 40)
-#     centerTableAlignment(writingSheet)
-#     setFontStyles(writingSheet, 18)
-
-#     saveScheduleTable(writingBook, searchValue, yearFile)
-# else:
-#     print(f" {searchValue} not found.")
-
 excelFilenames=getExcellFilenames()
 excelFileCount=0
 
 yearNames=['anul_I', 'anul_II','anul_III', 'anul_IV']
 yearFileCount=0
+
+os.makedirs('group_schedules', exist_ok=True)
+for year in yearNames:
+    os.makedirs(f'group_schedules/{year}', exist_ok=True)
 
 for excelFile in excelFilenames:
     print(f'{colors.BOLD}{colors.OKGREEN}>>>>>>>>{yearNames[yearFileCount]}{colors.ENDC}')

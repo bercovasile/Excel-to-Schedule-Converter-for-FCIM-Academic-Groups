@@ -2,7 +2,6 @@ import openpyxl
 from openpyxl import load_workbook
 from openpyxl.styles import Alignment
 from openpyxl.styles import Font
-from openpyxl.cell.cell import MergedCell
 import fitz
 
 import os
@@ -10,7 +9,6 @@ import re
 
 debug=False
 pdebug=False
-
 
 class colors:
     HEADER = '\033[95m'
@@ -75,8 +73,10 @@ def applyDefaultMergeStyle(writingSheet):
             currentCell=writingSheet[chr(column)+str(row)]
             underCell=writingSheet[chr(column)+str(row+1)]
 
-            writingSheet.merge_cells(f'{currentCell.coordinate}:{underCell.coordinate}')
+            if row!=1 and column!=65:
+                currentCell.value='#'
 
+            writingSheet.merge_cells(f'{currentCell.coordinate}:{underCell.coordinate}')
 #?----------------------------------------
 
 #?-------Helper functions for data--------
@@ -174,7 +174,6 @@ def isMergedHorizontally(schedule, cell):
         return True
     else:
         return False
-
 #?----------------------------------------
 
 #?-------Functional functions-------------
@@ -347,10 +346,10 @@ def extractAndTransferToTable(writingBook, readingBook, columnIndex, groupName, 
                 print(f"{colors.OKBLUE}#NODATA_LEN=6{colors.ENDC}")
             elif cellLength==12 and tempData!="":
                 print(f"{colors.OKBLUE}#LEN=12_DATA{colors.ENDC}")
-            elif not currentCell_hrztMerge and isMergedHorizontally(readingBook, nextCell):
-                print(f"{colors.OKBLUE}#NEXTCELL_MERGED_HRZNTLY{colors.ENDC}")
+            # elif not currentCell_hrztMerge and isMergedHorizontally(readingBook, nextCell):
+            #     print(f"{colors.OKBLUE}#NEXTCELL_MERGED_HRZNTLY{colors.ENDC}")
 
-        if (hasBottomBorder(currentCell, readingBook) or (cellLength==12 and tempData!="") or (cellLength==6 and tempData=="") or (tempData.count('\n') == 3 and cellLength in (3, 6)) or (not currentCell_hrztMerge and isMergedHorizontally(readingBook, nextCell))):
+        if (hasBottomBorder(currentCell, readingBook) or (cellLength==12 and tempData!="")) or (cellLength==6 and tempData=="") or (tempData.count('\n') == 3 and cellLength in (3, 6)): #or (not currentCell_hrztMerge and isMergedHorizontally(readingBook, nextCell))):
             if tempData!="" and ((profName in tempData) or (modProfName in tempData)):
                 if debug:
                     print(f'{colors.HEADER}----------------start_insert{colors.ENDC}')
@@ -453,6 +452,8 @@ def getPDFfilenames():
 #choosing data file:
 data_files=getExcellFilenames()
 pdf_files=getPDFfilenames()
+
+os.makedirs('prof_schedules', exist_ok=True)
 
 for file in pdf_files:
     print(f'{file}')

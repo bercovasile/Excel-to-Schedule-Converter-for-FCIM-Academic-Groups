@@ -1,4 +1,5 @@
 import subprocess
+import os
 
 class colors:
     HEADER = '\033[95m'
@@ -10,6 +11,11 @@ class colors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+
+os.makedirs('group_schedules', exist_ok=True)
+yearNames=['anul_I', 'anul_II','anul_III', 'anul_IV']
+for year in yearNames:
+    os.makedirs(yearNames, exist_ok=True)
 
 print(f'{colors.BOLD}{colors.UNDERLINE}{colors.OKBLUE}####Creating groups schedules.{colors.ENDC }')
 subprocess.run(['python', 'student_schedule.py'])
