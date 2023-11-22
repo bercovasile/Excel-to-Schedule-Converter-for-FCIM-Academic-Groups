@@ -73,8 +73,10 @@ def applyDefaultMergeStyle(writingSheet):
             currentCell=writingSheet[chr(column)+str(row)]
             underCell=writingSheet[chr(column)+str(row+1)]
 
-            writingSheet.merge_cells(f'{currentCell.coordinate}:{underCell.coordinate}')
+            if row!=1 and column!=65:
+                currentCell.value='#'
 
+            writingSheet.merge_cells(f'{currentCell.coordinate}:{underCell.coordinate}')
 #?----------------------------------------
 
 #?-------Helper functions for data--------
@@ -172,7 +174,6 @@ def isMergedHorizontally(schedule, cell):
         return True
     else:
         return False
-
 #?----------------------------------------
 
 #?-------Functional functions-------------

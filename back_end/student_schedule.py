@@ -71,6 +71,9 @@ def applyDefaultMergeStyle(writingSheet):
             currentCell=writingSheet[chr(column)+str(row)]
             underCell=writingSheet[chr(column)+str(row+1)]
 
+            if row!=1 and column!=65:
+                currentCell.value='#'
+
             writingSheet.merge_cells(f'{currentCell.coordinate}:{underCell.coordinate}')
 
 #?----------------------------------------
@@ -395,50 +398,6 @@ def getGroupNames(schedule):
     return fcimGroups, dataRow
 
 #?----------------------------------------
-
-#?-------Setting stuff up-----------------
-#choosing data file:
-#!get it from the server
-# data_file='Anul_III_2023_Semestrul_V.xlsx'
-# yearFile='anul_III'
-
-# #load the data workbook
-# readingBook=load_workbook(data_file)
-#     #select datasheet
-# schedule=readingBook.active
-
-# #creating writing book
-# writingBook=openpyxl.Workbook()
-# writingSheet=writingBook.active
-# #?-----------------------------------------
-
-
-# #?------Style writing file-----------------
-# setTimeIntervals(writingSheet)
-# applyDefaultMergeStyle(writingSheet)
-# # ?-----------------------------------------
-
-# fcimGroups, groupRow=getGroupNames(schedule)
-# print(fcimGroups)
-
-#*---Searching column letter and saving----
-#*---custom named file.--------------------
-
-# searchValue=input("Search group: ")
-# searchResult_columnLetter=findGroupColumn(schedule, searchValue, groupRow)
-
-# if searchResult_columnLetter is not None:
-#     print(f"found {searchValue} on column {searchResult_columnLetter}.")
-#     extractAndTransferToTable(writingBook, schedule, searchResult_columnLetter)
-
-#     setTableDimensions(writingSheet, 20, 40)
-#     centerTableAlignment(writingSheet)
-#     setFontStyles(writingSheet, 18)
-
-#     saveScheduleTable(writingBook, searchValue, yearFile)
-# else:
-#     print(f" {searchValue} not found.")
-
 excelFilenames=getExcellFilenames()
 excelFileCount=0
 
