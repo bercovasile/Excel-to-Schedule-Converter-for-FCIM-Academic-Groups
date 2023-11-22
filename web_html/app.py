@@ -49,13 +49,22 @@ def thacher():
 
 #-----------------------------------------------------------
 
-@app.route('/get_options_teacher', methods=['GET'])
-def get_options_teacher():
+def options_teacher():
     options_teacher=[]
     with open('./timetable/teacher/teacher.txt') as f:
         for line in f:
             options_teacher.append(line.strip())
-    return jsonify(options=options_teacher)  
+    return options_teacher
+
+def search_names(șir, lista_de_nume):
+    rezultat = [nume for nume in lista_de_nume if șir in nume]
+    return rezultat
+
+@app.route('/get_options_teacher', methods=['GET'])
+def get_options_teacher():
+    options_teachers=options_teacher()
+    return jsonify(options=options_teachers)  
+
 
 
 @app.route('/handle_selected_option_teacher', methods=['POST'])
@@ -65,9 +74,13 @@ def handle_selected_option_teacher():
 
     print(f"Selected Option: {selected_option_grups}") 
 
+    rezultat_cautare = cauta_numele(șir_cautat, lista_nume)
+
     excel_file_path = find_file_teacher(selected_option_grups)
     print(f"Fint paht is {excel_file_path}")
     return send_file(excel_file_path)
+
+
 
 def find_file_teacher(search_query):
     excel_extensions = ['.xlsx', '.xls', '.xlsm', '.xlsb', '.xltx', '.xltm']  # Lista cu extensiile Excel
