@@ -198,7 +198,7 @@ aside {
   outline: none;
   font-size: .9rem;
   font-family: 'poppins', sans-serif;
-  margin-left: 8px;
+  margin-left: 0px;
   width: 200px;
   transition: all .25s ease;
 }
@@ -244,10 +244,6 @@ aside {
   border: 2px solid transparent;
   transition: all .25s ease;
 }
-
-/*gbcgcgfcgcgccg*/
-/*gbcgcgfcgcgccg*/
-/*gbcgcgfcgcgccg*/
 
 
 @media (max-width: 1700px) {

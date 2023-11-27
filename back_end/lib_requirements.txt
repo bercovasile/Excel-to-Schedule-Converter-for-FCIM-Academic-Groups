@@ -1,2 +1,2 @@
-openpyxl 3.1.2
-PyMuPDF 1.23.5
+openpyxl==3.1.2
+PyMuPDF==1.23.5

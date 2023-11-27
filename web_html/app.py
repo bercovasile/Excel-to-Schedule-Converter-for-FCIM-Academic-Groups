@@ -74,11 +74,20 @@ def handle_selected_option_teacher():
 
     print(f"Selected Option: {selected_option_grups}") 
 
-    rezultat_cautare = cauta_numele(șir_cautat, lista_nume)
+    rezultat_cautare = search_names(selected_option_grups, options_teacher())
+    print(rezultat_cautare)
 
     excel_file_path = find_file_teacher(selected_option_grups)
     print(f"Fint paht is {excel_file_path}")
     return send_file(excel_file_path)
+
+
+@app.route('/get_options_teacher_from_text_input', methods=['POST'])
+def get_options_teacher_from_text_input():
+    data = request.get_json()
+    selected_option_grups = data.get("selectedOptionTeacher")
+    options_teachers=search_names(selected_option_grups, options_teacher())
+    return jsonify(options=options_teachers)  
 
 
 
