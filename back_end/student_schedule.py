@@ -404,9 +404,7 @@ excelFileCount=0
 yearNames=['anul_I', 'anul_II','anul_III', 'anul_IV']
 yearFileCount=0
 
-os.makedirs('timetable/student', exist_ok=True)
-# for year in yearNames:
-#         os.makedirs(f'student/{year}', exist_ok=True)
+# os.makedirs('timetable/student', exist_ok=True)
 
 # for excelFile, year in zip(excelFilenames, yearNames):
 #     print(f'{colors.BOLD}{colors.OKGREEN}>>>>>>>>{yearNames[yearFileCount]}{colors.ENDC}')
