@@ -322,7 +322,7 @@ def extractAndTransferToTable(writingBook, readingBook, columnIndex):
                             tempData+=cellData + '\n'
 
         elif currentCell_value != "MCE":
-            lastDataIsInt=currentCell_value.isdigit()
+            lastDataIsInt=str(currentCell_value).isdigit()
             tempData+=str(currentCell_value)+'\n'
             
         if debug:
@@ -337,18 +337,25 @@ def extractAndTransferToTable(writingBook, readingBook, columnIndex):
             elif (lastDataIsInt and tempData.count('\n')==3):
                 print(f"{colors.OKBLUE}#LASTINT_DATALEN=3{colors.ENDC}")
 
-        if hasBottomBorder(currentCell, readingBook) or (cellLength==12 and tempData!="") or  (lastDataIsInt and tempData.count('\n')==3) or (tempData.count('\n') == 3 and cellLength in (3, 6)) or (cellLength==6 and tempData==""):
+        extraCondition=(lastDataIsInt and tempData.count('\n')==3)
+        if hasBottomBorder(currentCell, readingBook) or (cellLength==12 and tempData!="") or extraCondition or (tempData.count('\n') == 3 and cellLength in (3, 6)) or (cellLength==6 and tempData==""):
             if tempData!="":
+                
+
+                if (lastInsertLength==3 and cellLength==9) or extraCondition:
+                    if cellLength>9:
+                        cellLength=12
+                    else:
+                        cellLength=6
+
+                
+                timeInterval=getTimeInterval(readingBook, rowNumber, cellLength)
+                isEvenCell=isEven(readingBook, rowNumber)
+                
                 if debug:
                     print(f'{colors.HEADER}----------------start_insert{colors.ENDC}')
                     print(f'{colors.BOLD}{tempData}ln:{cellLength}{colors.ENDC}')
-
-                print(f'last insert: {lastInsertLength}, current: {cellLength}')
-                if lastInsertLength==3 and cellLength==9:
-                    cellLength=6
-
-                timeInterval=getTimeInterval(readingBook, rowNumber, cellLength)
-                isEvenCell=isEven(readingBook, rowNumber)
+                
                 insertInTable(writingBook, dayIndex, timeInterval, cellLength, tempData, isEvenCell)
 
                 lastInsertLength=cellLength
@@ -483,7 +490,7 @@ for excelFile, year in zip(excelFilenames, yearNames):
 readingBook.close()
 
 #!TAKE A LOOK AT
-#*ANUL 2:
-
-#*ANUL 3:
-#FAF-221
+#FAF-231..233 #*JUST A WARNING
+#TI-223
+#TI-225
+#FAF-211
