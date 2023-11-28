@@ -6,7 +6,7 @@ from openpyxl.styles import Font
 import os
 import re
 
-debug=True
+debug=False
 
 class colors:
     HEADER = '\033[95m'
@@ -256,7 +256,6 @@ def insertInTable(writingBook, insertColumn, timeInterval, cellLength, data, isE
         return
 
     if cellLength==3:
-        # print('Insert():small')
         insertColumn_char=openpyxl.utils.get_column_letter(insertColumn)
     
         mergedRange=f'{insertColumn_char}{insertRow}:{insertColumn_char}{insertRow+1}'
@@ -267,6 +266,7 @@ def insertInTable(writingBook, insertColumn, timeInterval, cellLength, data, isE
             writingSheet.cell(row=insertRow+1, column=insertColumn).value=data
         else:
             writingSheet.cell(row=insertRow, column=insertColumn).value=data
+            writingSheet.cell(row=insertRow+1, column=insertColumn).value='#'
         
         return
     
@@ -291,12 +291,12 @@ def extractAndTransferToTable(writingBook, readingBook, columnIndex):
     dayIndex=2
     lastInsertLength=6
     
-
+    
     while True:
         currentCell_reference=f'{columnIndex}{rowNumber}'
         currentCell_value=readingBook[currentCell_reference].value
         currentCell=readingBook[currentCell_reference]
-
+        lastDataIsInt=False
 
         dayCounter+=1
         cellLength+=1
@@ -318,9 +318,11 @@ def extractAndTransferToTable(writingBook, readingBook, columnIndex):
                     if readingBook[firstInRange].value is not None:
                         cellData=readingBook[firstInRange].value
                         if cellData not in tempData:
+                            lastDataIsInt=cellData.isdigit()
                             tempData+=cellData + '\n'
 
         elif currentCell_value != "MCE":
+            lastDataIsInt=currentCell_value.isdigit()
             tempData+=str(currentCell_value)+'\n'
             
         if debug:
@@ -332,13 +334,16 @@ def extractAndTransferToTable(writingBook, readingBook, columnIndex):
                 print(f"{colors.OKBLUE}#NODATA_LEN=6{colors.ENDC}")
             elif cellLength==12 and tempData!="":
                 print(f"{colors.OKBLUE}#LEN=12_DATA{colors.ENDC}")
+            elif (lastDataIsInt and tempData.count('\n')==3):
+                print(f"{colors.OKBLUE}#LASTINT_DATALEN=3{colors.ENDC}")
 
-        if hasBottomBorder(currentCell, readingBook) or (cellLength==12 and tempData!="") or (tempData.count('\n') == 3 and cellLength in (3, 6)) or (cellLength==6 and tempData==""):
+        if hasBottomBorder(currentCell, readingBook) or (cellLength==12 and tempData!="") or  (lastDataIsInt and tempData.count('\n')==3) or (tempData.count('\n') == 3 and cellLength in (3, 6)) or (cellLength==6 and tempData==""):
             if tempData!="":
                 if debug:
                     print(f'{colors.HEADER}----------------start_insert{colors.ENDC}')
                     print(f'{colors.BOLD}{tempData}ln:{cellLength}{colors.ENDC}')
 
+                print(f'last insert: {lastInsertLength}, current: {cellLength}')
                 if lastInsertLength==3 and cellLength==9:
                     cellLength=6
 
@@ -404,58 +409,23 @@ excelFileCount=0
 yearNames=['anul_I', 'anul_II','anul_III', 'anul_IV']
 yearFileCount=0
 
-# os.makedirs('timetable/student', exist_ok=True)
+os.makedirs('timetable/student', exist_ok=True)
 
-# for excelFile, year in zip(excelFilenames, yearNames):
-#     print(f'{colors.BOLD}{colors.OKGREEN}>>>>>>>>{yearNames[yearFileCount]}{colors.ENDC}')
-#     readingBook=load_workbook(excelFile)
-#     schedule=readingBook.active 
+for excelFile, year in zip(excelFilenames, yearNames):
+    print(f'{colors.BOLD}{colors.OKGREEN}>>>>>>>>{yearNames[yearFileCount]}{colors.ENDC}')
+    readingBook=load_workbook(excelFile)
+    schedule=readingBook.active 
    
-#     fcimGroups, groupRow = getGroupNames(schedule)
+    fcimGroups, groupRow = getGroupNames(schedule)
 
-#     os.makedirs(f'timetable/student/{year}', exist_ok=True)
-#     with open(f'timetable/student/{year}/group_names.txt', 'w') as file:
-#         for group in fcimGroups:
-#             file.write(f'{group}\n')
+    os.makedirs(f'timetable/student/{year}', exist_ok=True)
+    with open(f'timetable/student/{year}/group_names.txt', 'w') as file:
+        for group in fcimGroups:
+            file.write(f'{group}\n')
     
-#     for group in fcimGroups:
-#         searchResult_columnLetter=findGroupColumn(schedule, group, groupRow)
-        
-#         writingBook=openpyxl.Workbook()
-#         writingSheet=writingBook.active
-#         #apply styles
-#         setTimeIntervals(writingSheet)
-#         applyDefaultMergeStyle(writingSheet)
-
-#         if searchResult_columnLetter is not None:
-#             print(f"found {group} on column {searchResult_columnLetter}.")
-#             extractAndTransferToTable(writingBook, schedule, searchResult_columnLetter)
-
-#             setTableDimensions(writingSheet, 20, 40)
-#             centerTableAlignment(writingSheet)
-#             setFontStyles(writingSheet, 18)
-
-#             saveScheduleTable(writingBook, group, yearNames[yearFileCount])
-#         else:
-#             print(f" {group} not found.")
-#     yearFileCount+=1
-#     excelFileCount+=1
-
-
-
-readingBook=load_workbook(excelFilenames[1])
-schedule=readingBook.active
-fcimGroups, groupRow = getGroupNames(schedule)
-
-print(fcimGroups)
-group=input(">Group:")
-
-
-if group in fcimGroups:
-        #find column letter 
+    for group in fcimGroups:
         searchResult_columnLetter=findGroupColumn(schedule, group, groupRow)
-
-        #create a new writebook
+        
         writingBook=openpyxl.Workbook()
         writingSheet=writingBook.active
         #apply styles
@@ -470,18 +440,50 @@ if group in fcimGroups:
             centerTableAlignment(writingSheet)
             setFontStyles(writingSheet, 18)
 
-            saveScheduleTable(writingBook, group, yearNames[1])
+            saveScheduleTable(writingBook, group, yearNames[yearFileCount])
         else:
             print(f" {group} not found.")
+    yearFileCount+=1
+    excelFileCount+=1
+
+
+
+# readingBook=load_workbook(excelFilenames[1])
+# schedule=readingBook.active
+# fcimGroups, groupRow = getGroupNames(schedule)
+
+# print(fcimGroups)
+# group=input(">Group:")
+
+
+# if group in fcimGroups:
+#         #find column letter 
+#         searchResult_columnLetter=findGroupColumn(schedule, group, groupRow)
+
+#         #create a new writebook
+#         writingBook=openpyxl.Workbook()
+#         writingSheet=writingBook.active
+#         #apply styles
+#         setTimeIntervals(writingSheet)
+#         applyDefaultMergeStyle(writingSheet)
+
+#         if searchResult_columnLetter is not None:
+#             print(f"found {group} on column {searchResult_columnLetter}.")
+#             extractAndTransferToTable(writingBook, schedule, searchResult_columnLetter)
+
+#             setTableDimensions(writingSheet, 20, 40)
+#             centerTableAlignment(writingSheet)
+#             setFontStyles(writingSheet, 18)
+
+#             saveScheduleTable(writingBook, group, yearNames[1])
+#         else:
+#             print(f" {group} not found.")
 #*-----------------------------------------
 
 readingBook.close()
 
 #!TAKE A LOOK AT
 #*ANUL 2:
-# TI-224
-# TI-225
-# TI-227
 
 #*ANUL 3:
 #FAF-221
