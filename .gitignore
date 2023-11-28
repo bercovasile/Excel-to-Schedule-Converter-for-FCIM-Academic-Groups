@@ -1,2 +1,4 @@
 timetable/
 pdfs/
+*.xlsx
+*.pdf
