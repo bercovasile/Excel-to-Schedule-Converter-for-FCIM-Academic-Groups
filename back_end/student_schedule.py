@@ -404,51 +404,23 @@ excelFileCount=0
 yearNames=['anul_I', 'anul_II','anul_III', 'anul_IV']
 yearFileCount=0
 
-os.makedirs('timetable/student', exist_ok=True)
-# for year in yearNames:
-#         os.makedirs(f'student/{year}', exist_ok=True)
+# os.makedirs('timetable/student', exist_ok=True)
 
-for excelFile, year in zip(excelFilenames, yearNames):
-    print(f'{colors.BOLD}{colors.OKGREEN}>>>>>>>>{yearNames[yearFileCount]}{colors.ENDC}')
-    readingBook=load_workbook(excelFile)
-    schedule=readingBook.active 
+# for excelFile, year in zip(excelFilenames, yearNames):
+#     print(f'{colors.BOLD}{colors.OKGREEN}>>>>>>>>{yearNames[yearFileCount]}{colors.ENDC}')
+#     readingBook=load_workbook(excelFile)
+#     schedule=readingBook.active 
    
-    fcimGroups, groupRow = getGroupNames(schedule)
+#     fcimGroups, groupRow = getGroupNames(schedule)
 
-    os.makedirs(f'timetable/student/{year}', exist_ok=True)
-    with open(f'timetable/student/{year}/group_names.txt', 'w') as file:
-        for group in fcimGroups:
-            file.write(f'{group}\n')
+#     os.makedirs(f'timetable/student/{year}', exist_ok=True)
+#     with open(f'timetable/student/{year}/group_names.txt', 'w') as file:
+#         for group in fcimGroups:
+#             file.write(f'{group}\n')
     
-    for group in fcimGroups:
-        searchResult_columnLetter=findGroupColumn(schedule, group, groupRow)
-        
-        writingBook=openpyxl.Workbook()
-        writingSheet=writingBook.active
-        #apply styles
-        setTimeIntervals(writingSheet)
-        applyDefaultMergeStyle(writingSheet)
-
-        if searchResult_columnLetter is not None:
-            print(f"found {group} on column {searchResult_columnLetter}.")
-            extractAndTransferToTable(writingBook, schedule, searchResult_columnLetter)
-
-            setTableDimensions(writingSheet, 20, 40)
-            centerTableAlignment(writingSheet)
-            setFontStyles(writingSheet, 18)
-
-            saveScheduleTable(writingBook, group, yearNames[yearFileCount])
-        else:
-            print(f" {group} not found.")
-    yearFileCount+=1
-    excelFileCount+=1
-
-
-# for group in fcimGroups:
-#         #find column letter 
+#     for group in fcimGroups:
 #         searchResult_columnLetter=findGroupColumn(schedule, group, groupRow)
-
-#         #create a new writebook
+        
 #         writingBook=openpyxl.Workbook()
 #         writingSheet=writingBook.active
 #         #apply styles
@@ -463,9 +435,47 @@ for excelFile, year in zip(excelFilenames, yearNames):
 #             centerTableAlignment(writingSheet)
 #             setFontStyles(writingSheet, 18)
 
-#             saveScheduleTable(writingBook, group, yearFile)
+#             saveScheduleTable(writingBook, group, yearNames[yearFileCount])
 #         else:
 #             print(f" {group} not found.")
+#     yearFileCount+=1
+#     excelFileCount+=1
+
+
+readingBook=load_workbook(excelFilenames[1])
+schedule=readingBook.active
+fcimGroups, groupRow=getGroupNames(schedule)
+print(fcimGroups)
+
+#! FOR TESTING ONLY 
+os.makedirs('timetable/student', exist_ok=True)
+os.makedirs(f'timetable/student/{yearNames[1]}', exist_ok=True)
+yearFile=f'timetable/student/{yearNames[1]}'
+
+group=input('> Group: ')
+
+if group in fcimGroups:
+    #find column letter 
+    searchResult_columnLetter=findGroupColumn(schedule, group, groupRow)
+
+    #create a new writebook
+    writingBook=openpyxl.Workbook()
+    writingSheet=writingBook.active
+    #apply styles
+    setTimeIntervals(writingSheet)
+    applyDefaultMergeStyle(writingSheet)
+
+    if searchResult_columnLetter is not None:
+        print(f"found {group} on column {searchResult_columnLetter}.")
+        extractAndTransferToTable(writingBook, schedule, searchResult_columnLetter)
+
+        setTableDimensions(writingSheet, 20, 40)
+        centerTableAlignment(writingSheet)
+        setFontStyles(writingSheet, 18)
+
+        saveScheduleTable(writingBook, group, yearNames[1])
+    else:
+        print(f" {group} not found.")
 #*-----------------------------------------
 
 readingBook.close()
