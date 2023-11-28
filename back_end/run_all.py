@@ -1,5 +1,4 @@
 import subprocess
-import os
 
 class colors:
     HEADER = '\033[95m'

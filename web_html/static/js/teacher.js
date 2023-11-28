@@ -58,6 +58,9 @@ function sendDataToBackendFromTextInput(test) {
   let selectedOptionTeacher = document.getElementById('inputText').value;
   console.log('Text trimis către backend:', selectedOptionTeacher);
 
+  const selectOptionsGrups = document.getElementById("selectOptionsTeacher");
+
+
   fetch("/handle_selected_option_teacher", {
     method: 'POST',
     body: JSON.stringify({ selectedOptionTeacher }),
@@ -76,6 +79,32 @@ function sendDataToBackendFromTextInput(test) {
     .catch(error => {
       console.error('Eroare:', error);
     });
+
+    fetch("/get_options_teacher_from_text_input", {
+      method: "POST", // sau "GET" în funcție de necesități
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ selectedOptionTeacher }),
+    })
+      .then(response => response.json())
+      .then(data => {
+        // Ștergeți opțiunile actuale din al doilea combobox
+        selectOptionsGrups.innerHTML = "";
+  
+        // Adăugați opțiunile noi în al doilea combobox
+        data.options.forEach(option => {
+          const optionElement = document.createElement("option");
+          optionElement.textContent = option;
+          optionElement.value = option;
+          selectOptionsTeacher.appendChild(optionElement);
+        });
+      })
+      .catch(error => {
+        console.error("Error updating second combobox:", error);
+      });
+
+  
 }
 
 

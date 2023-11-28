@@ -216,7 +216,7 @@ def saveScheduleTable(writingBook, fileName, yearFile):
     if '/' in fileName:
         fileName=fileName.replace('/', '-')
 
-    filePath=f"group_schedules/{yearFile}/{fileName}.xlsx"
+    filePath=f"timetable/student/{yearFile}/{fileName}.xlsx"
 
     if os.path.exists(filePath):
         os.remove(filePath)
@@ -396,7 +396,7 @@ def getGroupNames(schedule):
             break
 
     return fcimGroups, dataRow
-
+    
 #?----------------------------------------
 excelFilenames=getExcellFilenames()
 excelFileCount=0
@@ -404,16 +404,21 @@ excelFileCount=0
 yearNames=['anul_I', 'anul_II','anul_III', 'anul_IV']
 yearFileCount=0
 
-os.makedirs('group_schedules', exist_ok=True)
-for year in yearNames:
-    os.makedirs(f'group_schedules/{year}', exist_ok=True)
+os.makedirs('timetable/student', exist_ok=True)
+# for year in yearNames:
+#         os.makedirs(f'student/{year}', exist_ok=True)
 
-for excelFile in excelFilenames:
+for excelFile, year in zip(excelFilenames, yearNames):
     print(f'{colors.BOLD}{colors.OKGREEN}>>>>>>>>{yearNames[yearFileCount]}{colors.ENDC}')
     readingBook=load_workbook(excelFile)
     schedule=readingBook.active 
+   
+    fcimGroups, groupRow = getGroupNames(schedule)
 
-    fcimGroups, groupRow=getGroupNames(schedule)
+    os.makedirs(f'timetable/student/{year}', exist_ok=True)
+    with open(f'timetable/student/{year}/group_names.txt', 'w') as file:
+        for group in fcimGroups:
+            file.write(f'{group}\n')
     
     for group in fcimGroups:
         searchResult_columnLetter=findGroupColumn(schedule, group, groupRow)

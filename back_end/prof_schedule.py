@@ -219,7 +219,7 @@ def saveScheduleTable(writingBook, fileName):
     if '/' in fileName:
         fileName=fileName.replace('/', '-')
 
-    filePath=f"prof_schedules/{fileName}.xlsx"
+    filePath=f"timetable/teacher/{fileName}.xlsx"
 
     if os.path.exists(filePath):
         os.remove(filePath)
@@ -453,12 +453,12 @@ def getPDFfilenames():
 data_files=getExcellFilenames()
 pdf_files=getPDFfilenames()
 
-os.makedirs('prof_schedules', exist_ok=True)
+os.makedirs('timetable/teacher', exist_ok=True)
 
 for file in pdf_files:
     print(f'{file}')
 
-with open('prof_names.txt', 'r') as prof_names:
+with open('timetable/teacher/teacher_names.txt', 'r') as prof_names:
     for row in prof_names:
         name=row.split('|')[0]
         instanceCap=int(row.split('|')[1])

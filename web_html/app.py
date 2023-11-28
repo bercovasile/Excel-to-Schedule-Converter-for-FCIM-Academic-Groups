@@ -3,11 +3,11 @@
 from flask import Flask, request, send_file ,render_template ,redirect
 from flask import jsonify
 import os
-import jpype     
-import asposecells     
-import logging
-jpype.startJVM() 
-from asposecells.api import Workbook
+#import jpype     
+#import asposecells     
+#import logging
+#jpype.startJVM() 
+#from asposecells.api import Workbook
 
  
 app = Flask(__name__ ,  template_folder='/templates')
@@ -18,7 +18,7 @@ app = Flask(__name__ ,  template_folder='/templates')
 UPLOAD_FOLDER = './'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-logging.basicConfig(filename='record.log', level=logging.DEBUG, format=f'%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
+#logging.basicConfig(filename='record.log', level=logging.DEBUG, format=f'%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
 
 
 #-----------------------------------------------------------
@@ -51,7 +51,7 @@ def thacher():
 
 def options_teacher():
     options_teacher=[]
-    with open('./timetable/teacher/teacher.txt') as f:
+    with open('./timetable/teacher/teacher_names.txt') as f:
         for line in f:
             options_teacher.append(line.strip())
     return options_teacher
@@ -74,11 +74,20 @@ def handle_selected_option_teacher():
 
     print(f"Selected Option: {selected_option_grups}") 
 
-    rezultat_cautare = cauta_numele(șir_cautat, lista_nume)
+    rezultat_cautare = search_names(selected_option_grups, options_teacher())
+    print(rezultat_cautare)
 
     excel_file_path = find_file_teacher(selected_option_grups)
     print(f"Fint paht is {excel_file_path}")
     return send_file(excel_file_path)
+
+
+@app.route('/get_options_teacher_from_text_input', methods=['POST'])
+def get_options_teacher_from_text_input():
+    data = request.get_json()
+    selected_option_grups = data.get("selectedOptionTeacher")
+    options_teachers=search_names(selected_option_grups, options_teacher())
+    return jsonify(options=options_teachers)  
 
 
 
@@ -105,22 +114,22 @@ def get_options_grups():
     selected_option = data.get("selectedOption")
     options_grups=[]
     if selected_option == "Anul 1" :
-        with open('./timetable/student/Anul 1/grupe.txt') as f:
+        with open('./timetable/student/anul_I/group_names.txt') as f:
             for line in f:
                 options_grups.append(line.strip())
         return jsonify(options=options_grups)        
     elif selected_option == "Anul 2" :
-        with open('./timetable/student/Anul 2/grupe.txt') as f1:
+        with open('./timetable/student/anul_II/group_names.txt') as f1:
             for line in f1:
                 options_grups.append(line.strip())
         return jsonify(options=options_grups)   
     elif selected_option == "Anul 3" :
-        with open('./timetable/student/Anul 3/grupe.txt') as f2:
+        with open('./timetable/student/anul_III/group_names.txt') as f2:
             for line in f2:
                 options_grups.append(line.strip())
         return jsonify(options=options_grups) 
     elif selected_option == "Anul 4" :
-        with open('./timetable/student/Anul 4/grupe.txt') as f3:
+        with open('./timetable/student/anul_IV/group_names.txt') as f3:
             for line in f3:
                 options_grups.append(line.strip())
         return jsonify(options=options_grups)

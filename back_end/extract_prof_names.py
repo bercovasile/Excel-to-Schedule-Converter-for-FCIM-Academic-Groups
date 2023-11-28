@@ -39,6 +39,6 @@ for name in names:
     if name.split(' ')[1] in dictionary:
         names.remove(name)
 
-with open("prof_names.txt", "w") as file:
+with open("timetable/teacher/teacher_names.txt", "w") as file:
     for name in names:
         file.write(f'{name}|{clean_list.count(name) + clean_list.count(name.replace(" ", ""))}\n')
