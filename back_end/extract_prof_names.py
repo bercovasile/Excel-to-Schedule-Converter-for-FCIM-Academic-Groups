@@ -17,7 +17,7 @@ def extract_text_from_pdf(pdf_path):
 
 folder_path='pdfs'
 text=""
-dictionary=('Ed', 'Fizica', 'Ghidare', 'Engleza', 'Gh', 'Proiect')
+dictionary=('Ed', 'Fizica', 'Ghidare', 'Engleza', 'Gh', 'Proiect', 'Managementul', 'L. Engleza')
 
 for filename in os.listdir(folder_path):
     file_path=os.path.join(folder_path, filename)
