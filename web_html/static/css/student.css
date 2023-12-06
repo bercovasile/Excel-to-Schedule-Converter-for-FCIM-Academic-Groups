@@ -140,6 +140,7 @@ aside {
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
   font-weight: bold;
 }
 
@@ -152,6 +153,8 @@ aside {
   display: flex;
   justify-content: center;
   align-items: center;
+  white-space: pre-line;
+  text-align: center;
   padding: 3px;
   font-weight: bold;
 }
@@ -165,7 +168,9 @@ aside {
   border-radius: 5px;
   display: flex;
   justify-content: center;
+  white-space: pre-line;
   align-items: center;
+  text-align: center;
   font-weight: bold;
 }
 

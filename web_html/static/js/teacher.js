@@ -133,19 +133,19 @@ function excel_to_html_table_4(excel_blob) {
 
             if (sheet_data[row + 1][cell] !== undefined) {
 
-              var undefinedCellValue = cellValue === '.' ? "📖" : cellValue;
+              var undefinedCellValue = cellValue === '#' ? "📖" : cellValue;
               table_output += '<td class="entry1 hsText "><div class="table_cell_content_merge_1"> ' + undefinedCellValue + '</div></td>';
 
-              var mergeCell = sheet_data[row + 1][cell] === '.' ? "📖" : sheet_data[row + 1][cell];
+              var mergeCell = sheet_data[row + 1][cell] === '#' ? "📖" : sheet_data[row + 1][cell];
               merge_data += '<td class="entry1 hsText "><div class="table_cell_content_merge_2">' + mergeCell + '</div></td>';
 
             } else {
               if ((cell == 0) && (row != 0)) {
-                var undefinedCellValue = cellValue === '.' ? "📖  <font siz</font>" : cellValue;
+                var undefinedCellValue = cellValue === '#' ? "📖  <font siz</font>" : cellValue;
                 table_output += '<td class="entry1 hsText " rowspan="2"><div class="table_first_column">' + undefinedCellValue + '</div></td>';
               }
               else {
-                var undefinedCellValue = cellValue === '.' ? "📖" : cellValue;
+                var undefinedCellValue = cellValue === '#' ? "📖" : cellValue;
                 table_output += '<td class="entry1 hsText " rowspan="2"><div class="table_cell_content">' + undefinedCellValue + '</div></td>';
               }
             }
@@ -179,7 +179,7 @@ function excel_to_html_table_5(excel_blob) {
       for (var coll = 1; coll < sheet_data.length; coll++)
         for (var row = 0; row < sheet_data.length; row = row + 2) {
           var cellValue = sheet_data[row][coll];
-          var undefinedCellValue = cellValue === '.' ? "📖" : cellValue;
+          var undefinedCellValue = cellValue === '#' ? "📖" : cellValue;
 
           if (sheet_data[row][coll] !== undefined)
             if (sheet_data[row + 1][coll] !== undefined) {
@@ -187,7 +187,7 @@ function excel_to_html_table_5(excel_blob) {
               table_output += '<tr class="ce1 colorYellow"> <td class="entry1 hsText"><div class="table_cell_content_merge_1">' + undefinedCellValue + '</div></td> </tr>';
 
               var cellValue = sheet_data[row + 1][coll];
-              var undefinedCellValue = cellValue === '.' ? "📖" : cellValue;
+              var undefinedCellValue = cellValue === '#' ? "📖" : cellValue;
               table_output += '<tr class="ce1 colorYellow"> <td class="entry1 hsText"><div class="table_cell_content_merge_2">' + undefinedCellValue + '</div></td> </tr>';
             }
             else
