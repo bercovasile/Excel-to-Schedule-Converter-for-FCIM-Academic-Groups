@@ -53,7 +53,7 @@ def options_teacher():
     options_teacher=[]
     with open('./timetable/teacher/teacher_names.txt') as f:
         for line in f:
-            options_teacher.append(line.strip())
+            options_teacher.append(line.strip().split('|')[0].strip())
     return options_teacher
 
 def search_names(șir, lista_de_nume):
@@ -164,7 +164,7 @@ def find_file_student(search_query):
 #-----------------------------------------------------------
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001,debug=True)
+    app.run(host='0.0.0.0', port=5000,debug=True)
 
 
 

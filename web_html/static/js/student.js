@@ -44,9 +44,9 @@ function sendSelectedOptionGrups(test) {
     .then(blob => {
 
       if (test)
-        excel_to_html_table_4(blob);
+        excel_to_html_table_pc(blob);
       else
-        excel_to_html_table_5(blob);
+        excel_to_html_table_mobile(blob);
 
     })
     .catch(error => {
@@ -55,7 +55,7 @@ function sendSelectedOptionGrups(test) {
 }
 
 
-function excel_to_html_table_4(excel_blob) {
+function excel_to_html_table_pc(excel_blob) {
   var reader = new FileReader();
   reader.onload = function (event) {
     var data = new Uint8Array(event.target.result);
@@ -113,7 +113,7 @@ function excel_to_html_table_4(excel_blob) {
 }
 
 
-function excel_to_html_table_5(excel_blob) {
+function excel_to_html_table_mobile(excel_blob) {
   var reader = new FileReader();
   reader.onload = function (event) {
     var data = new Uint8Array(event.target.result);

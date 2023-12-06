@@ -1,0 +1,22 @@
+version: '3.0'
+
+services:
+  web_app_1:
+    image: timetable:v1
+    scale: 2
+    restart: unless-stopped
+  web_app_2:
+    image: timetable:v1
+    scale: 2
+    restart: unless-stopped
+  loadbalancer:
+    build:
+      context: server
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - web_app_1
+      - web_app_2
+    ports:
+      - 80:80
+    
