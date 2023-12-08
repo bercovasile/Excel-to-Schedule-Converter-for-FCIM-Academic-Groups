@@ -272,12 +272,10 @@ def transferProfClasses(name, instances, readTable, insertTable, tableName):
              print(f'{colors.FAIL}Error: {e}.{colors.ENDC}')
         
     return foundInstances
-
 #!---------------------------------------------------------
 
 
-
-#?-------Setting stuff up-----------------
+#?-------PSEUDO MAIN-------------------
 #choosing data file:
 data_files=getExcellFilenames()
 group_tables=getPathsList()
@@ -330,5 +328,5 @@ with open('timetable/teacher/teacher_names.txt', 'r') as prof_names:
             applyDefaultMergeStyle(insertTable)
             print(f'{colors.OKGREEN}saved {name}.xlsx{colors.ENDC}')
             saveScheduleTable(writingBook, name)
+#?-------------------------------------
 
-#*-----------------------------------------
