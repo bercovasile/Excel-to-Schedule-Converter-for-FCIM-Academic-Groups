@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
   populateComboBox();
 });
 
-function sendSelectedOptionGrups(test) {
+function sendSelectedOptionTeacher(test) {
   const selectOptionsTeacher = document.getElementById("selectOptionsTeacher");
   const selectedOptionTeacher = selectOptionsTeacher.value; // Obțineți valoarea opțiunii selectate
   // Trimiteți opțiunea aleasă către backend folosind o cerere AJAX
@@ -43,9 +43,9 @@ function sendSelectedOptionGrups(test) {
     .then(response => response.blob())
     .then(blob => {
       if (test)
-        excel_to_html_table_4(blob);
+        excel_to_html_table_pc(blob);
       else
-        excel_to_html_table_5(blob);
+        excel_to_html_table_mobile(blob);
 
     })
     .catch(error => {
@@ -71,9 +71,9 @@ function sendDataToBackendFromTextInput(test) {
     .then(response => response.blob())
     .then(blob => {
       if (test)
-        excel_to_html_table_4(blob);
+        excel_to_html_table_pc(blob);
       else
-        excel_to_html_table_5(blob);
+        excel_to_html_table_mobile(blob);
 
     })
     .catch(error => {
@@ -108,7 +108,7 @@ function sendDataToBackendFromTextInput(test) {
 }
 
 
-function excel_to_html_table_4(excel_blob) {
+function excel_to_html_table_pc(excel_blob) {
   var reader = new FileReader();
   reader.onload = function (event) {
     var data = new Uint8Array(event.target.result);
@@ -166,7 +166,7 @@ function excel_to_html_table_4(excel_blob) {
 }
 
 
-function excel_to_html_table_5(excel_blob) {
+function excel_to_html_table_mobile(excel_blob) {
   var reader = new FileReader();
   reader.onload = function (event) {
     var data = new Uint8Array(event.target.result);
@@ -209,9 +209,9 @@ function checkScreenWidth(select_input) {
   const width = window.innerWidth;
   if (select_input)
     if (width > 600)
-      sendSelectedOptionGrups(1);
+      sendSelectedOptionTeacher(1);
     else
-      sendSelectedOptionGrups(0);
+      sendSelectedOptionTeacher(0);
   else
     if (width > 600)
       sendDataToBackendFromTextInput(1)

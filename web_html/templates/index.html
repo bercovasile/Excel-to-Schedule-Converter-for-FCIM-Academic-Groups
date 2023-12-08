@@ -13,15 +13,12 @@
     <link rel="stylesheet" href="../static/css/index.css">
 
     <script>
-        // Adăugați o funcție JavaScript pentru a redirecționa la ruta /student
         function redirectToStudent() {
             fetch('/student', { method: 'GET' })
             window.location.href = '/student';
         }
-
-        // Adăugați o funcție JavaScript pentru a redirecționa la ruta /student
         function redirectToTeacher() {
-            fetch('/student', { method: 'GET' })
+            fetch('/teacher', { method: 'GET' })
             window.location.href = '/teacher';
         }
     </script>

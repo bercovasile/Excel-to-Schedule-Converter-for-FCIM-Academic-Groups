@@ -1,25 +1,11 @@
-
-
 from flask import Flask, request, send_file ,render_template ,redirect
 from flask import jsonify
 import os
-#import jpype     
-#import asposecells     
-#import logging
-#jpype.startJVM() 
-#from asposecells.api import Workbook
-
  
 app = Flask(__name__ ,  template_folder='/templates')
 
-
-
-
 UPLOAD_FOLDER = './'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-#logging.basicConfig(filename='record.log', level=logging.DEBUG, format=f'%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
-
 
 #-----------------------------------------------------------
 
@@ -53,7 +39,7 @@ def options_teacher():
     options_teacher=[]
     with open('./timetable/teacher/teacher_names.txt') as f:
         for line in f:
-            options_teacher.append(line.strip())
+            options_teacher.append(line.strip().split('|')[0].strip())
     return options_teacher
 
 def search_names(șir, lista_de_nume):
@@ -64,8 +50,6 @@ def search_names(șir, lista_de_nume):
 def get_options_teacher():
     options_teachers=options_teacher()
     return jsonify(options=options_teachers)  
-
-
 
 @app.route('/handle_selected_option_teacher', methods=['POST'])
 def handle_selected_option_teacher():
@@ -81,15 +65,12 @@ def handle_selected_option_teacher():
     print(f"Fint paht is {excel_file_path}")
     return send_file(excel_file_path)
 
-
 @app.route('/get_options_teacher_from_text_input', methods=['POST'])
 def get_options_teacher_from_text_input():
     data = request.get_json()
     selected_option_grups = data.get("selectedOptionTeacher")
     options_teachers=search_names(selected_option_grups, options_teacher())
     return jsonify(options=options_teachers)  
-
-
 
 def find_file_teacher(search_query):
     excel_extensions = ['.xlsx', '.xls', '.xlsm', '.xlsb', '.xltx', '.xltm']  # Lista cu extensiile Excel
@@ -164,7 +145,7 @@ def find_file_student(search_query):
 #-----------------------------------------------------------
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001,debug=True)
+    app.run(host='0.0.0.0', port=5000,debug=True)
 
 
 
