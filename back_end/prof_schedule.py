@@ -2,14 +2,11 @@ import openpyxl
 from openpyxl import load_workbook
 from openpyxl.styles import Alignment
 from openpyxl.styles import Font
-import fitz
 
 import os
-import re
 import pandas as pd
 import random as rand
 import numpy as np
-
 
 debug=False
 pdebug=False
@@ -103,41 +100,17 @@ def applyDefaultMergeStyle(writingSheet):
             if currentCell.value is None and underCell.value!=None:
                 writingSheet.merge_cells(f'{currentCell.coordinate}:{underCell.coordinate}')
                 currentCell.value='#'
-                continue
-
-                    
+                continue            
 #?----------------------------------------
 
-#?-------Helper functions for data--------
-#?-------extraction-----------------------
 
-def isMerged(writingSheet, range):
-    # Split the check_range into individual cell references
-    cell_references = range.split(':')
-    start_cell, end_cell = cell_references[0], cell_references[1]
-
-        # Get the merged cell ranges in the worksheet
-    merged_cells = writingSheet.merged_cells.ranges
-
-        # Check if the specified range is merged
-    is_merged = False
-
-    for merged_range in merged_cells:
-        if start_cell in merged_range and end_cell in merged_range:
-            is_merged = True
-            break
-
-    return is_merged
-
+#?-------Functional functions-------------
 def isInMergedRange(schedule, cell):
     if cell.coordinate in schedule.merged_cells:
         return True
     else:
         return False
-
-#?----------------------------------------
-
-#?-------Functional functions-------------
+    
 def saveScheduleTable(writingBook, fileName):
     if fileName is None:
         writingBook.close()
@@ -194,6 +167,7 @@ def getPDFfilenames():
 
     filePaths[0], filePaths[2], filePaths[3]=filePaths[3], filePaths[0], filePaths[2]
     return filePaths
+#?----------------------------------------
         
 
 #!-------AUTISM CHECK--------------------------------------
@@ -259,9 +233,6 @@ def getPathsList():
     
     return filePaths
 
-def __unmergeRange(table, range):
-    table.unmerge_cells(range)
-
 def transferProfClasses(name, instances, readTable, insertTable, tableName):
     validRows=[3, 5, 7, 9, 11, 13, 15]
     foundInstances=0
@@ -305,7 +276,6 @@ def transferProfClasses(name, instances, readTable, insertTable, tableName):
 #!---------------------------------------------------------
 
 
-#?----------------------------------------
 
 #?-------Setting stuff up-----------------
 #choosing data file:
