@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
   populateComboBox();
 });
 
-function sendSelectedOptionGrups(test) {
+function sendSelectedOptionTeacher(test) {
   const selectOptionsTeacher = document.getElementById("selectOptionsTeacher");
   const selectedOptionTeacher = selectOptionsTeacher.value; // Obțineți valoarea opțiunii selectate
   // Trimiteți opțiunea aleasă către backend folosind o cerere AJAX
@@ -209,9 +209,9 @@ function checkScreenWidth(select_input) {
   const width = window.innerWidth;
   if (select_input)
     if (width > 600)
-      sendSelectedOptionGrups(1);
+      sendSelectedOptionTeacher(1);
     else
-      sendSelectedOptionGrups(0);
+      sendSelectedOptionTeacher(0);
   else
     if (width > 600)
       sendDataToBackendFromTextInput(1)

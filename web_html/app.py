@@ -1,25 +1,11 @@
-
-
 from flask import Flask, request, send_file ,render_template ,redirect
 from flask import jsonify
 import os
-#import jpype     
-#import asposecells     
-#import logging
-#jpype.startJVM() 
-#from asposecells.api import Workbook
-
  
 app = Flask(__name__ ,  template_folder='/templates')
 
-
-
-
 UPLOAD_FOLDER = './'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-#logging.basicConfig(filename='record.log', level=logging.DEBUG, format=f'%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
-
 
 #-----------------------------------------------------------
 
@@ -65,8 +51,6 @@ def get_options_teacher():
     options_teachers=options_teacher()
     return jsonify(options=options_teachers)  
 
-
-
 @app.route('/handle_selected_option_teacher', methods=['POST'])
 def handle_selected_option_teacher():
     data = request.get_json()
@@ -81,15 +65,12 @@ def handle_selected_option_teacher():
     print(f"Fint paht is {excel_file_path}")
     return send_file(excel_file_path)
 
-
 @app.route('/get_options_teacher_from_text_input', methods=['POST'])
 def get_options_teacher_from_text_input():
     data = request.get_json()
     selected_option_grups = data.get("selectedOptionTeacher")
     options_teachers=search_names(selected_option_grups, options_teacher())
     return jsonify(options=options_teachers)  
-
-
 
 def find_file_teacher(search_query):
     excel_extensions = ['.xlsx', '.xls', '.xlsm', '.xlsb', '.xltx', '.xltm']  # Lista cu extensiile Excel

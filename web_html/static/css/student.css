@@ -46,11 +46,11 @@ select {
   outline: 0;
   box-shadow: none;
   border: 0 !important;
-  background: #469597;
+  background: #ffffff;
   background-image: none;
   flex: 1;
   padding: 0 .5em;
-  color: #fff;
+  color: #000;
   cursor: pointer;
   font-size: 1em;
   font-family: 'Open Sans', sans-serif;
@@ -66,7 +66,7 @@ select::-ms-expand {
   width: 15em;
   height: 3em;
   line-height: 3;
-  background: #51f0cd;
+  background: #ffffff;
   overflow: hidden;
   border-radius: .25em;
 }
@@ -77,14 +77,14 @@ select::-ms-expand {
   top: 0;
   right: 0;
   padding: 0 .8em;
-  background: #62a0a0;
+  background: #aa9880;
   cursor: pointer;
   pointer-events: none;
   transition: .25s all ease;
 }
 
 .select:hover::after {
-  color: #23b499;
+  color: #82735c;
 }
 
 /* div box */
@@ -106,7 +106,7 @@ aside {
 
   margin: 0;
   padding-bottom: 50px;
-  background-color: #F8EDE3;
+  background-color: #F8EDE0;
 }
 
 .box_tabel {
@@ -122,7 +122,7 @@ aside {
   width: 250px;
   height: 60px;
   border-radius: 5px;
-  background: #64B9AB;
+  background: #DFD3C3;
   font-size: 30px;
   display: flex;
   justify-content: center;
@@ -136,7 +136,7 @@ aside {
   height: 150px;
   font-size: 23px;
   border-radius: 5px;
-  background: #64B9AB;
+  background: #DFD3C3;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -149,7 +149,7 @@ aside {
   height: 150px;
   font-size: 15px;
   border-radius: 5px;
-  background: #4f739c;
+  background: #ffffff;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -175,11 +175,11 @@ aside {
 }
 
 .table_cell_content_merge_1 {
-  background: #b992cf;
+  background: #fff9b9;
 }
 
 .table_cell_content_merge_2 {
-  background: #8c7cbb;
+  background: #fff1b3;
 }
 
 

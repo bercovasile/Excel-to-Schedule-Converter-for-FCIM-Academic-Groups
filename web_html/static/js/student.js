@@ -5,7 +5,7 @@ function updateSecondComboBox() {
   const selectOptionsGrups = document.getElementById("selectOptionsGrups");
 
   fetch("/get_options_grups", {
-    method: "POST", // sau "GET" în funcție de necesități
+    method: "POST", 
     headers: {
       "Content-Type": "application/json",
     },
@@ -13,10 +13,7 @@ function updateSecondComboBox() {
   })
     .then(response => response.json())
     .then(data => {
-      // Ștergeți opțiunile actuale din al doilea combobox
       selectOptionsGrups.innerHTML = "";
-
-      // Adăugați opțiunile noi în al doilea combobox
       data.options.forEach(option => {
         const optionElement = document.createElement("option");
         optionElement.textContent = option;
@@ -31,10 +28,9 @@ function updateSecondComboBox() {
 
 function sendSelectedOptionGrups(test) {
   const selectOptionsGrups = document.getElementById("selectOptionsGrups");
-  const selectedOptionGrups = selectOptionsGrups.value; // Obțineți valoarea opțiunii selectate
-  // Trimiteți opțiunea aleasă către backend folosind o cerere AJAX
+  const selectedOptionGrups = selectOptionsGrups.value;
   fetch("/handle_selected_option_grups", {
-    method: "POST", // sau "GET" în funcție de necesități
+    method: "POST", 
     headers: {
       "Content-Type": "application/json",
     },
