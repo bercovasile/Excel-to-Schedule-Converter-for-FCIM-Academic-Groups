@@ -2,3 +2,4 @@ timetable/
 pdfs/
 *.xlsx
 *.pdf
+test.py

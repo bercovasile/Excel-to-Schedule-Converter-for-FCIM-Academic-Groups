@@ -6,6 +6,10 @@ import fitz
 
 import os
 import re
+import pandas as pd
+import random as rand
+import numpy as np
+
 
 debug=False
 pdebug=False
@@ -73,49 +77,39 @@ def applyDefaultMergeStyle(writingSheet):
             currentCell=writingSheet[chr(column)+str(row)]
             underCell=writingSheet[chr(column)+str(row+1)]
 
-            if row!=1 and column!=65:
-                currentCell.value='#'
+            # if row!=1 and column!=65:
+            #     currentCell.value='#'
 
-            writingSheet.merge_cells(f'{currentCell.coordinate}:{underCell.coordinate}')
+
+            #data in both
+            if currentCell.value is None and underCell.value is None:
+                writingSheet.merge_cells(f'{currentCell.coordinate}:{underCell.coordinate}')
+                currentCell.value='#'
+                continue
+                        
+
+            #only up data
+            if currentCell.value != None and underCell.value is None:
+                writingSheet.merge_cells(f'{currentCell.coordinate}:{underCell.coordinate}')
+                continue
+
+            #no up data, ## in lower cell
+            if currentCell.value is None and underCell.value=='#':
+                writingSheet.merge_cells(f'{currentCell.coordinate}:{underCell.coordinate}')
+                currentCell.value='#'
+                continue
+
+            #data only in lower
+            if currentCell.value is None and underCell.value!=None:
+                writingSheet.merge_cells(f'{currentCell.coordinate}:{underCell.coordinate}')
+                currentCell.value='#'
+                continue
+
+                    
 #?----------------------------------------
 
 #?-------Helper functions for data--------
 #?-------extraction-----------------------
-def hasNoUpperBorder(cell):
-    return cell.border.top.style in (None, "", "none")
-
-def hasBottomBorder(cell, schedule):
-    strCell=(str(cell).split('.')[1])[:-1]
-
-    pattern = r'([A-Za-z]+)(\d+)'
-    coord=re.match(pattern, strCell)
-
-    nextCell=schedule[f'{coord.group(1)}{int(coord.group(2))+1}']
-    
-    if cell.border.bottom.style not in (None, "", "none") and nextCell.border.bottom.style not in (None, "", "none"):
-        return False
-
-    return cell.border.bottom.style not in (None, "", "none")
-
-def getTimeInterval(schedule, row, cellLength):
-    while schedule[f'C{row}'].value is None:
-        row-=1
-    else:
-        if cellLength==12:
-            return schedule[f'C{row-6}'].value
-        else:
-            return schedule[f'C{row}'].value
-
-def isEven(schedule, row):
-    cellCounter=1
-    while schedule[f'C{row}'].value is None:
-        row-=1
-        cellCounter+=1
-    else:
-        if cellCounter==3:  
-            return False
-        elif cellCounter==6:
-            return True
 
 def isMerged(writingSheet, range):
     # Split the check_range into individual cell references
@@ -135,82 +129,15 @@ def isMerged(writingSheet, range):
 
     return is_merged
 
-def getCellLength(schedule, row, column):
-    cellLength=1
-    while hasNoUpperBorder(schedule[f'{column}{row}']):
-        row-=1
-        cellLength+=1
-    else:
-        return cellLength
-
 def isInMergedRange(schedule, cell):
     if cell.coordinate in schedule.merged_cells:
         return True
     else:
         return False
 
-def getFirstCellInRange(schedule, cell):
-    for range in schedule.merged_cells.ranges:
-        if cell.coordinate in range:
-            return str(range).split(':')[0]
-
-def getLastCellInRange(schedule, cell):
-    for range in schedule.merged_cells.ranges:
-        if cell.coordinate in range:
-            return str(range).split(':')[1] 
-
-def isMergedHorizontally(schedule, cell):
-    firstCell=getFirstCellInRange(schedule, cell)
-    lastCell=getLastCellInRange(schedule, cell)
-
-    if None in (firstCell, lastCell):
-        return False
-
-    pattern = r'([A-Za-z]+)(\d+)'
-    firstCoord=re.match(pattern, str(firstCell))
-    secondCoord=re.match(pattern, str(lastCell))
-
-    if(firstCoord.group(1)!=secondCoord.group(1)):
-        return True
-    else:
-        return False
 #?----------------------------------------
 
 #?-------Functional functions-------------
-def removeDuplicates(text):
-    lines = text.split('\n')
-    # Remove duplicates while preserving the order of the lines
-    unique_lines = []
-    seen_lines = set()
-
-    for line in lines:
-        if line not in seen_lines:
-            seen_lines.add(line)
-            unique_lines.append(line)
-
-    # Join the unique lines back into a single string with newlines
-    result_text = '\n'.join(unique_lines)
-    return result_text
-
-def findStartRow(schedule):
-    for row in range(1, 15):
-        if schedule[f'C{row}'].value == "8.00-9.30":
-            return row
-    else:
-        return 0
-
-def findGroupColumn(schedule, group, groupsRow):
-    #extracting group names from excel file
-    for column in schedule.iter_cols(min_row=groupsRow, max_row=groupsRow):
-        for cell in column:
-            if cell.value == group:
-                columnLetter=openpyxl.utils.get_column_letter(cell.column)
-                return columnLetter
-        else:
-            continue
-
-    return None
-
 def saveScheduleTable(writingBook, fileName):
     if fileName is None:
         writingBook.close()
@@ -226,166 +153,6 @@ def saveScheduleTable(writingBook, fileName):
     
     writingBook.save(filePath)
     writingBook.close()
-
-def approximateCellLength(cellLength):
-    if cellLength <= 3:
-        return 3
-    elif cellLength>3 and cellLength <= 7:
-        return 6
-    elif cellLength > 7:
-        return 12
-    return 0
-
-def insertInTable(writingBook, insertColumn, timeInterval, cellLength, data, isEven, groupName):
-    writingSheet=writingBook.active
-    insertRow=0
-
-    if timeInterval==None:
-        print(f"{colors.FAIL}InsertInTable(): time interval is None.\033[0m")
-        print(f"for data:{data}\nlen: {cellLength}{colors.ENDC}")
-        return
-        
-    if cellLength not in (3, 6, 12):
-        print(f"{colors.FAIL}Insert(): invalid cell length: {cellLength}.{colors.ENDC}")
-        return
-
-    for timeRow in range(3, 16, 2):
-        if timeInterval==writingSheet[f'A{timeRow}'].value:
-            insertRow=timeRow
-            break
-
-    if insertRow==0:
-        print(f"\033[31mInsertInTable(): time interval not found: {timeInterval}\033[0m")
-        return
-
-
-    data+=f'\n{groupName}'
-    if cellLength==3:
-        # print('Insert():small')
-        insertColumn_char=openpyxl.utils.get_column_letter(insertColumn)
-    
-        mergedRange=f'{insertColumn_char}{insertRow}:{insertColumn_char}{insertRow+1}'
-        if isMerged(writingSheet, mergedRange):
-            writingSheet.unmerge_cells(f'{insertColumn_char}{insertRow}:{insertColumn_char}{insertRow+1}')
-        
-        if isEven:
-            writingSheet.cell(row=insertRow+1, column=insertColumn).value=data
-        else:
-            writingSheet.cell(row=insertRow, column=insertColumn).value=data
-        
-        return
-    
-    elif cellLength==6:
-        # print('Insert():regular')
-        writingSheet.cell(row=insertRow, column=insertColumn).value=data
-
-    elif cellLength==12:
-        # print('Insert():double')
-        insertColumn_char=openpyxl.utils.get_column_letter(insertColumn)
-        writingSheet.unmerge_cells(f'{insertColumn_char}{insertRow}:{insertColumn_char}{insertRow+1}')
-        writingSheet.unmerge_cells(f'{insertColumn_char}{insertRow+2}:{insertColumn_char}{insertRow+3}')
-        writingSheet.merge_cells(f'{insertColumn_char}{insertRow}:{insertColumn_char}{insertRow+3}')
-        writingSheet.cell(row=insertRow, column=insertColumn).value=data
-
-def extractAndTransferToTable(writingBook, readingBook, columnIndex, groupName, profName, instances, instanceCap):
-    tempData=""
-    rowNumber=findStartRow(schedule)
-
-    cellLength=0
-    dayCounter=-1
-    dayIndex=2
-    lastInsertLength=6
-
-    modProfName=profName.replace(' ', '')
-    instanceCount=instances
-
-    while True:
-        if instanceCount==instanceCap:
-            return instanceCount
-
-        currentCell_reference=f'{columnIndex}{rowNumber}'
-        currentCell_value=readingBook[currentCell_reference].value
-        currentCell=readingBook[currentCell_reference]
-        currentCell_hrztMerge=False
-
-        nextCell=readingBook[f'{columnIndex}{rowNumber+1}']
-        nextNextCell=readingBook[f'{columnIndex}{rowNumber+2}']
-
-        dayCounter+=1
-        cellLength+=1
-
-        if cellLength > 12:
-            print(f'{colors.FAIL}Extract(): Cell length > 12.{colors.ENDC}')
-
-        if debug:
-            if currentCell_value is None:
-                print(f'{colors.WARNING}{currentCell_reference}|{colors.ENDC}')
-            else:
-                print(f'{currentCell_reference}={currentCell_value}')
-                #print(f'{colors.BOLD}->len:{cellLength}{colors.ENDC}')
-
-        if currentCell_value is None:
-            if isInMergedRange(readingBook, currentCell):
-                if isMergedHorizontally(readingBook, currentCell):
-                    currentCell_hrztMerge=True
-                    firstInRange=getFirstCellInRange(readingBook, currentCell)
-                    if readingBook[firstInRange].value is not None:
-                        cellData=readingBook[firstInRange].value
-                        if cellData not in tempData:
-                            tempData+=cellData + '\n'
-
-        elif currentCell_value != "MCE" or (profName not in currentCell_value) or (modProfName not in currentCell_value):
-            tempData+=str(currentCell_value)+'\n'
-            
-        if debug:
-            if hasBottomBorder(currentCell, readingBook):
-                print(f"{colors.OKBLUE}#MET_BRDR{colors.ENDC}")
-            elif tempData.count('\n') == 3 and cellLength in (3, 6):
-                print(f"{colors.OKBLUE}#LINELEN=3_LEN=(3,6){colors.ENDC}")
-            elif cellLength==6 and tempData=="":
-                print(f"{colors.OKBLUE}#NODATA_LEN=6{colors.ENDC}")
-            elif cellLength==12 and tempData!="":
-                print(f"{colors.OKBLUE}#LEN=12_DATA{colors.ENDC}")
-            # elif not currentCell_hrztMerge and isMergedHorizontally(readingBook, nextCell):
-            #     print(f"{colors.OKBLUE}#NEXTCELL_MERGED_HRZNTLY{colors.ENDC}")
-
-        if (hasBottomBorder(currentCell, readingBook) or (cellLength==12 and tempData!="")) or (cellLength==6 and tempData=="") or (tempData.count('\n') == 3 and cellLength in (3, 6)): #or (not currentCell_hrztMerge and isMergedHorizontally(readingBook, nextCell))):
-            if tempData!="" and ((profName in tempData) or (modProfName in tempData)):
-                if debug:
-                    print(f'{colors.HEADER}----------------start_insert{colors.ENDC}')
-                    print(f'{colors.BOLD}{tempData}ln:{cellLength}{colors.ENDC}')
-
-                if lastInsertLength==3 and cellLength==9:
-                    cellLength=6
-
-                timeInterval=getTimeInterval(readingBook, rowNumber, cellLength)
-                isEvenCell=isEven(readingBook, rowNumber)
-                
-                insertInTable(writingBook, dayIndex, timeInterval, cellLength, tempData, isEvenCell, groupName)
-                
-                instanceCount+=1
-                lastInsertLength=cellLength
-                
-                if debug:
-                    print(f'{colors.OKCYAN}----------------end_insert{colors.ENDC}')
-
-            tempData=""
-            cellLength=0
-
-        if dayCounter == 42:
-            if tempData!="":
-                print(f"{colors.FAIL}Extract({group}|{currentCell_reference}): Data out of day bounds.{colors.ENDC}")
-
-            tempData=""
-            cellLength=0
-            dayIndex+=1
-            dayCounter=-1
-    
-        rowNumber+=1
-        if rowNumber==260:
-            break
-    
-    return instanceCount
 
 def getGroupNames(schedule):
     #lista grupe dupa nume
@@ -416,24 +183,6 @@ def getExcellFilenames():
     
     excelFiles[0],excelFiles[2],excelFiles[3]=excelFiles[3],excelFiles[0], excelFiles[2]
     return excelFiles
-
-def __extract_text_from_pdf(pdf_path):
-    pdf_document = fitz.open(pdf_path)
-    page = pdf_document[0]
-    text = page.get_text()
-
-    text.replace('\\n', ' ').replace('\n', ' ').replace(' ', '').replace('.', '. ').strip()
-    name_pattern=re.compile(r'\b[A-Z]\.\s*[A-Z][a-z]+\b')
-    text=name_pattern.findall(text)
-
-    pdf_document.close()
-    return text
-
-def getNameInstances(name, file):
-    text=__extract_text_from_pdf(file)
-    instances=text.count(name) + text.count(name.replace(" ", ""))
-
-    return instances
         
 def getPDFfilenames():
     folder_path='pdfs'
@@ -446,20 +195,128 @@ def getPDFfilenames():
     filePaths[0], filePaths[2], filePaths[3]=filePaths[3], filePaths[0], filePaths[2]
     return filePaths
         
+
+#!-------AUTISM CHECK--------------------------------------
+def extractAllTextFromExcel(file_path):
+    df = pd.read_excel(file_path, header=None)
+    stacked_series = df.stack()
+    all_text = stacked_series.astype(str).tolist()
+
+    return all_text
+
+def countInstancesInText(name, text):
+    # return text.count(name) + text.count(name.replace(' ', ''))
+    instances=0
+    for string in text:
+        if (name in string) or (name.replace(' ', '') in string):
+            instances+=1
+
+    return instances
+
+def __buildTreeWithPaths(directory_path):
+    tree = {}
+
+    for root, dirs, files in os.walk(directory_path):
+        current_level = tree
+        path = root.split(os.path.sep)
+
+        for i, folder in enumerate(path):
+            if folder not in current_level:
+                current_level[folder] = {} if i < len(path) - 1 else {'files': []}
+            current_level = current_level[folder]
+
+        if files:
+            current_level['files'].extend(files)
+
+    return tree
+
+def __getFilePaths(tree, current_path='', file_paths=None):
+    if file_paths is None:
+        file_paths = []
+
+    for key, value in tree.items():
+        new_path = os.path.join(current_path, key) if current_path else key
+
+        if isinstance(value, dict):
+            __getFilePaths(value, current_path=new_path, file_paths=file_paths)
+        elif key == 'files':
+            for file in value:
+                file_paths.append(os.path.join(new_path, file))
+
+    return file_paths
+
+def getPathsList():
+    directory_path = 'timetable'
+    tree = __buildTreeWithPaths(directory_path)
+    excel_file_paths = __getFilePaths(tree)
+
+    # Print the full paths to Excel files
+    filePaths=[]
+    for path in excel_file_paths:
+        if path.endswith('.xlsx') or path.endswith('.xls'):
+            if '$' not in path and 'teacher' not in path:
+                filePaths.append(path.replace('files\\', ''))
+    
+    return filePaths
+
+def __unmergeRange(table, range):
+    table.unmerge_cells(range)
+
+def transferProfClasses(name, instances, readTable, insertTable, tableName):
+    validRows=[3, 5, 7, 9, 11, 13, 15]
+    foundInstances=0
+    # maxIterations=1000
+    # currentIterations=0
+    nospName=name.replace(' ', '')
+    thrownPoints=np.zeros((16, 7), dtype=bool) 
+
+    while(foundInstances!=instances):
+        randRow=validRows[rand.randint(0, 6)]  
+        colIndex=rand.randrange(1, 7)
+        randCol=chr(ord('A') + colIndex)
+        
+        if thrownPoints[randRow, colIndex]:
+            continue
+
+        readCell=readTable[f'{randCol}{randRow}']
+        readCellData=readCell.value
+
+        readCellNext=readTable[f'{randCol}{randRow+1}']
+        readCellNextData=readCellNext.value
+
+        try:
+            if (name in readCellData) or (nospName in readCellData):
+                insertTable[f'{randCol}{randRow}'].value=readCellData + tableName
+                thrownPoints[randRow, colIndex]=True
+                foundInstances+=1
+            
+            if not isInMergedRange(readTable, readCell):
+                if (name in readCellNextData) or (nospName in readCellNextData):
+                    insertTable[f'{randCol}{randRow+1}'].value=readCellNextData + tableName
+                    thrownPoints[randRow, colIndex]=True
+                    foundInstances+=1
+                else:
+                    insertTable[f'{randCol}{randRow+1}'].value='#'
+        except Exception as e:
+             print(f'{colors.FAIL}Error: {e}.{colors.ENDC}')
+        
+    return foundInstances
+
+#!---------------------------------------------------------
+
+
 #?----------------------------------------
 
 #?-------Setting stuff up-----------------
 #choosing data file:
 data_files=getExcellFilenames()
-pdf_files=getPDFfilenames()
+group_tables=getPathsList()
 
 os.makedirs('timetable/teacher', exist_ok=True)
 
-for file in pdf_files:
-    print(f'{file}')
-
 with open('timetable/teacher/teacher_names.txt', 'r') as prof_names:
     for row in prof_names:
+        saveFile=False
         name=row.split('|')[0]
         instanceCap=int(row.split('|')[1])
         instances=int(0)
@@ -471,49 +328,37 @@ with open('timetable/teacher/teacher_names.txt', 'r') as prof_names:
         print(f'{colors.WARNING}Prof:{name}{colors.ENDC}')
 
         writingBook=openpyxl.Workbook()
-        writingSheet=writingBook.active
+        insertTable=writingBook.active
 
-        setTimeIntervals(writingSheet)
-        applyDefaultMergeStyle(writingSheet)
-        
-        for excelFile in data_files:
-            print(f'{colors.OKGREEN}YEAR: {excelFile}{colors.ENDC}')
+        setTimeIntervals(insertTable)
+        # applyDefaultMergeStyle(insertTable)
+        setFontStyles(insertTable, 18)
+        centerTableAlignment(insertTable)
+        setTableDimensions(insertTable, 20, 40)
 
-            number=getNameInstances(name, pdf_files[pdf_count])
-            print(f'{colors.BOLD}instances:{number} in {pdf_files[pdf_count]}{colors.ENDC}')
 
-            if number==0:
-                pdf_count+=1
-                continue
+        for groupTable in group_tables:
+            #open excel file
+            openTable=load_workbook(groupTable)
+            table=openTable.active
 
-            readingBook=load_workbook(excelFile)
-            schedule=readingBook.active
-
-            fcimGroups, groupRow=getGroupNames(schedule)
-            setTableDimensions(writingSheet, 20, 40)
-            centerTableAlignment(writingSheet)
-            setFontStyles(writingSheet, 18)
-
-            for group in fcimGroups:         
-                if instanceCap==instances:
-                    break
-
-                groupColumn=findGroupColumn(schedule, group, groupRow)
-                if groupColumn is not None:
-                    if pdebug:
-                        print(f'Processing {group}')
-
-                    instances=extractAndTransferToTable(writingBook, schedule, groupColumn, group, name, instances, instanceCap)
-                    
-                    if pdebug:
-                        print(f'{colors.OKCYAN}{instances}/{instanceCap}{colors.ENDC}')
-                elif pdebug:
-                    print(f'{group} not found.')
-
-            pdf_count+=1
+            nameInstances=countInstancesInText(name, extractAllTextFromExcel(groupTable))
             
-            if instances==instanceCap:
-                break
+            #if instances found
+            if nameInstances != 0:
+                print(f'processing {groupTable}# {nameInstances}')
+                #monte carlo in file
+                groupName=groupTable.split('\\')[3].split('.')[0]
+                transferProfClasses(name, nameInstances, table, insertTable, groupName)
+                saveFile=True
 
-        saveScheduleTable(writingBook, name)
+            if nameInstances==instanceCap:
+                break
+        
+        #save file
+        if saveFile:
+            applyDefaultMergeStyle(insertTable)
+            print(f'{colors.OKGREEN}saved {name}.xlsx{colors.ENDC}')
+            saveScheduleTable(writingBook, name)
+
 #*-----------------------------------------
