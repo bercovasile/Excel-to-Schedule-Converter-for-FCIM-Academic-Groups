@@ -229,7 +229,7 @@ def getPathsList():
     for path in excel_file_paths:
         if path.endswith('.xlsx') or path.endswith('.xls'):
             if '$' not in path and 'teacher' not in path:
-                filePaths.append(path.replace('files\\', ''))
+                filePaths.append(path.replace('files/', ''))
     
     return filePaths
 
@@ -316,7 +316,7 @@ with open('timetable/teacher/teacher_names.txt', 'r') as prof_names:
             if nameInstances != 0:
                 print(f'processing {groupTable}# {nameInstances}')
                 #monte carlo in file
-                groupName=groupTable.split('\\')[3].split('.')[0]
+                groupName=groupTable.split('/')[3].split('.')[0]
                 transferProfClasses(name, nameInstances, table, insertTable, groupName)
                 saveFile=True
 

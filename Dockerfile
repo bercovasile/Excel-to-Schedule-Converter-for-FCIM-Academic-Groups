@@ -11,7 +11,6 @@ RUN apt-get install -y python3
 
 RUN python student_schedule.py
 RUN python extract_prof_names.py
-RUN ls /usr/src/app/timetable/student/anul_III
 RUN python prof_schedule.py
 
 COPY ./web_html /usr/share/web
