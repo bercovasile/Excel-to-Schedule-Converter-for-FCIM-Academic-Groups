@@ -291,12 +291,12 @@ def extractAndTransferToTable(writingBook, readingBook, columnIndex):
     dayIndex=2
     lastInsertLength=6
     
-    
     while True:
         currentCell_reference=f'{columnIndex}{rowNumber}'
         currentCell_value=readingBook[currentCell_reference].value
         currentCell=readingBook[currentCell_reference]
         lastDataIsInt=False
+        halfGroupCond=False
 
         dayCounter+=1
         cellLength+=1
@@ -325,6 +325,20 @@ def extractAndTransferToTable(writingBook, readingBook, columnIndex):
             lastDataIsInt=str(currentCell_value).isdigit()
             tempData+=str(currentCell_value)+'\n'
             
+        if '1)' in tempData:
+            #iterate 11 more rows and get data out:
+            for row in range(rowNumber+1, rowNumber+11):
+                cell_ref=f'{columnIndex}{row}'
+                cell_value=readingBook[cell_ref].value
+                if cell_value != None:
+                    tempData+= cell_value + '\n'
+        
+            halfGroupCond=True
+            rowNumber+=11
+            dayCounter+=11
+            cellLength=12
+
+        
         if debug:
             if hasBottomBorder(currentCell, readingBook):
                 print(f"{colors.OKBLUE}#MET_BRDR{colors.ENDC}")
@@ -338,7 +352,7 @@ def extractAndTransferToTable(writingBook, readingBook, columnIndex):
                 print(f"{colors.OKBLUE}#LASTINT_DATALEN=3{colors.ENDC}")
 
         extraCondition=(lastDataIsInt and tempData.count('\n')==3)
-        if hasBottomBorder(currentCell, readingBook) or (cellLength==12 and tempData!="") or extraCondition or (tempData.count('\n') == 3 and cellLength in (3, 6)) or (cellLength==6 and tempData==""):
+        if halfGroupCond or hasBottomBorder(currentCell, readingBook) or (cellLength==12 and tempData!="") or extraCondition or (tempData.count('\n') == 3 and cellLength in (3, 6)) or (cellLength==6 and tempData==""):
             if tempData!="":
                 
 
@@ -348,6 +362,8 @@ def extractAndTransferToTable(writingBook, readingBook, columnIndex):
                     else:
                         cellLength=6
 
+                if cellLength==8:
+                    cellLength=6
                 
                 timeInterval=getTimeInterval(readingBook, rowNumber, cellLength)
                 isEvenCell=isEven(readingBook, rowNumber)
@@ -376,7 +392,7 @@ def extractAndTransferToTable(writingBook, readingBook, columnIndex):
             dayCounter=-1
     
         rowNumber+=1
-        if rowNumber==260:
+        if rowNumber>260:
             break
 
 def getExcellFilenames():
@@ -485,12 +501,18 @@ for excelFile, year in zip(excelFilenames, yearNames):
 #             saveScheduleTable(writingBook, group, yearNames[1])
 #         else:
 #             print(f" {group} not found.")
-#*-----------------------------------------
+# #*-----------------------------------------
 
 readingBook.close()
 
+
+
 #!TAKE A LOOK AT
-#FAF-231..233 #*JUST A WARNING
-#TI-223
-#TI-225
-#FAF-211
+#year 1
+#FAF231-233 #* invalid cell length:1.
+
+#year 2
+#TI-225     #* invalid cell length: 7, 1, 2.
+
+#year 3
+#FAF-221    #* invalid cell length: 1, 5.

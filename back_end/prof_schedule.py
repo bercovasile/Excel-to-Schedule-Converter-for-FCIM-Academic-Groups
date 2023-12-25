@@ -8,8 +8,8 @@ import pandas as pd
 import random as rand
 import numpy as np
 
-debug=False
-pdebug=False
+debug=True
+# pdebug=True
 
 class colors:
     HEADER = '\033[95m'
@@ -170,7 +170,7 @@ def getPDFfilenames():
 #?----------------------------------------
         
 
-#!-------AUTISM CHECK--------------------------------------
+#!-------______--------------------------------------
 def extractAllTextFromExcel(file_path):
     df = pd.read_excel(file_path, header=None)
     stacked_series = df.stack()
@@ -224,7 +224,6 @@ def getPathsList():
     tree = __buildTreeWithPaths(directory_path)
     excel_file_paths = __getFilePaths(tree)
 
-    # Print the full paths to Excel files
     filePaths=[]
     for path in excel_file_paths:
         if path.endswith('.xlsx') or path.endswith('.xls'):
@@ -236,8 +235,7 @@ def getPathsList():
 def transferProfClasses(name, instances, readTable, insertTable, tableName):
     validRows=[3, 5, 7, 9, 11, 13, 15]
     foundInstances=0
-    # maxIterations=1000
-    # currentIterations=0
+  
     nospName=name.replace(' ', '')
     thrownPoints=np.zeros((16, 7), dtype=bool) 
 
@@ -246,7 +244,7 @@ def transferProfClasses(name, instances, readTable, insertTable, tableName):
         colIndex=rand.randrange(1, 7)
         randCol=chr(ord('A') + colIndex)
         
-        if thrownPoints[randRow, colIndex]:
+        if thrownPoints[randRow, colIndex] or (readCellData is None):
             continue
 
         readCell=readTable[f'{randCol}{randRow}']
@@ -256,11 +254,16 @@ def transferProfClasses(name, instances, readTable, insertTable, tableName):
         readCellNextData=readCellNext.value
 
         try:
+            if isInMergedRange(readTable, readCell):
+                # writingSheet.merge_cells(f'{currentCell.coordinate}:{underCell.coordinate}')
+                insertTable[f'{randCol}{randRow}'].value=readCellData+tableName
+                insertTable[f'{randCol}{randRow+1}'].value=readCellData+tableName
+
             if (name in readCellData) or (nospName in readCellData):
                 insertTable[f'{randCol}{randRow}'].value=readCellData + tableName
                 thrownPoints[randRow, colIndex]=True
                 foundInstances+=1
-            
+
             if not isInMergedRange(readTable, readCell):
                 if (name in readCellNextData) or (nospName in readCellNextData):
                     insertTable[f'{randCol}{randRow+1}'].value=readCellNextData + tableName
@@ -268,6 +271,7 @@ def transferProfClasses(name, instances, readTable, insertTable, tableName):
                     foundInstances+=1
                 else:
                     insertTable[f'{randCol}{randRow+1}'].value='#'
+
         except Exception as e:
              print(f'{colors.FAIL}Error: {e}.{colors.ENDC}')
         
